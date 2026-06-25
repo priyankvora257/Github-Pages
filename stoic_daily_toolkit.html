@@ -215,6 +215,27 @@ body {
 }
 .journal-card textarea:focus { border-color:#7F77DD; background:white; }
 .journal-card textarea::placeholder { color:#b4b2a9; }
+.journal-auth {
+  background:white; border-radius:14px;
+  border:1.5px solid #e8e6e0;
+  padding:1rem 1.1rem; margin-bottom:12px;
+}
+.journal-auth-top {
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin-bottom:.65rem; flex-wrap:wrap;
+}
+.journal-auth-top strong { font-size:13px; }
+.journal-date { font-size:12px; color:#888780; }
+.journal-auth-row { display:flex; gap:8px; flex-wrap:wrap; }
+.journal-auth-row input {
+  flex:1; min-width:190px;
+  border:1.5px solid #e8e6e0; border-radius:10px;
+  padding:.58rem .8rem; font-size:13px;
+}
+.journal-auth-row input:focus { outline:none; border-color:#7F77DD; }
+.journal-auth-status { font-size:12px; margin-top:.55rem; color:#888780; }
+.journal-auth-status.ok { color:#0F6E56; }
+.journal-auth-status.err { color:#9A2F2F; }
 
 /* SUMMARY BAR */
 .summary-bar {
@@ -550,8 +571,21 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
       <div class="section-icon" style="background:#f5f4f0; border:1.5px solid #e8e6e0; font-size:22px;">✍️</div>
       <div>
         <h2>Stoic journal</h2>
-        <p>Write here — your entries stay private on this page</p>
+        <p>Write here — encrypted session + cloud save on your private gist</p>
       </div>
+    </div>
+
+    <div class="journal-auth">
+      <div class="journal-auth-top">
+        <strong>Journal storage</strong>
+        <span id="journal-date" class="journal-date"></span>
+      </div>
+      <div class="journal-auth-row">
+        <input id="journal-passphrase" type="password" placeholder="Enter your journal passphrase">
+        <button id="journal-unlock" class="btn btn-primary">Unlock &amp; sync</button>
+        <button id="journal-logout" class="btn" style="display:none;">Lock</button>
+      </div>
+      <div id="journal-auth-status" class="journal-auth-status">Locked. Enter passphrase to load and save entries.</div>
     </div>
 
     <div class="callout">
@@ -560,27 +594,27 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
 
     <div class="journal-card">
       <h3>Morning intention — today I will practice...</h3>
-      <textarea placeholder="As a [role], I will practice [virtue] by [specific action] today..."></textarea>
+      <textarea data-field="morning_intention" disabled placeholder="As a [role], I will practice [virtue] by [specific action] today..."></textarea>
     </div>
     <div class="journal-card">
       <h3>What could go wrong today? (and how will I handle it?)</h3>
-      <textarea placeholder="If [difficult thing] happens, I will respond by..."></textarea>
+      <textarea data-field="premeditatio_malorum" disabled placeholder="If [difficult thing] happens, I will respond by..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Evening review — what did I do well today?</h3>
-      <textarea placeholder="Honest and specific — even small things count..."></textarea>
+      <textarea data-field="evening_well" disabled placeholder="Honest and specific — even small things count..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Evening review — where did I fall short?</h3>
-      <textarea placeholder="No judgment — just clear observation of what happened and why..."></textarea>
+      <textarea data-field="evening_shortfall" disabled placeholder="No judgment — just clear observation of what happened and why..."></textarea>
     </div>
     <div class="journal-card">
       <h3>What am I grateful for today that I usually take for granted?</h3>
-      <textarea placeholder="Imagine losing it. Now write about having it..."></textarea>
+      <textarea data-field="gratitude" disabled placeholder="Imagine losing it. Now write about having it..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Free space — write to Epictetus, or to your future self</h3>
-      <textarea style="min-height:120px;" placeholder="Whatever is on your mind — the Stoic tradition is one of honest self-examination, not performance..."></textarea>
+      <textarea data-field="free_space" disabled style="min-height:120px;" placeholder="Whatever is on your mind — the Stoic tradition is one of honest self-examination, not performance..."></textarea>
     </div>
   </div>
 
@@ -703,6 +737,230 @@ function ctrlReset() {
   v.className = 'verdict-box';
   document.getElementById('ctrl-summary').classList.remove('show');
 }
+
+var STOIC_API_BASE = 'https://project-8dip5-h57vbt3co-vora-s-awesome-force.vercel.app';
+var STOIC_TOKEN_KEY = 'stoic_session_token';
+var STOIC_QUESTION_IDS = [
+  'morning_intention',
+  'premeditatio_malorum',
+  'evening_well',
+  'evening_shortfall',
+  'gratitude',
+  'free_space'
+];
+
+var journalState = {
+  token: localStorage.getItem(STOIC_TOKEN_KEY) || '',
+  saveTimer: null,
+  hydrated: false,
+  syncing: false
+};
+
+function getLocalDateKey() {
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = String(now.getMonth() + 1).padStart(2, '0');
+  var d = String(now.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + d;
+}
+
+function apiConfigured() {
+  return STOIC_API_BASE.indexOf('REPLACE_WITH_YOUR_VERCEL_PROJECT') === -1;
+}
+
+function setJournalStatus(text, kind) {
+  var el = document.getElementById('journal-auth-status');
+  if (!el) return;
+  el.textContent = text;
+  el.className = 'journal-auth-status';
+  if (kind === 'ok') el.classList.add('ok');
+  if (kind === 'err') el.classList.add('err');
+}
+
+function setJournalInputsDisabled(disabled) {
+  document.querySelectorAll('#journal textarea[data-field]').forEach(function(area) {
+    area.disabled = disabled;
+  });
+}
+
+function setAuthButtons() {
+  var unlock = document.getElementById('journal-unlock');
+  var logout = document.getElementById('journal-logout');
+  var pass = document.getElementById('journal-passphrase');
+  var isAuthed = !!journalState.token;
+
+  if (unlock) unlock.style.display = isAuthed ? 'none' : 'inline-block';
+  if (logout) logout.style.display = isAuthed ? 'inline-block' : 'none';
+  if (pass) pass.style.display = isAuthed ? 'none' : 'block';
+  setJournalInputsDisabled(!isAuthed);
+}
+
+function readEntryFromUI() {
+  var entry = {};
+  STOIC_QUESTION_IDS.forEach(function(id) {
+    var area = document.querySelector('#journal textarea[data-field="' + id + '"]');
+    entry[id] = area ? area.value : '';
+  });
+  return entry;
+}
+
+function writeEntryToUI(entry) {
+  STOIC_QUESTION_IDS.forEach(function(id) {
+    var area = document.querySelector('#journal textarea[data-field="' + id + '"]');
+    if (area) area.value = (entry && typeof entry[id] === 'string') ? entry[id] : '';
+  });
+}
+
+async function journalRequest(path, options) {
+  var headers = { 'Content-Type': 'application/json' };
+  if (journalState.token) headers.Authorization = 'Bearer ' + journalState.token;
+
+  var response = await fetch(STOIC_API_BASE + path, {
+    method: options.method,
+    headers: headers,
+    body: options.body ? JSON.stringify(options.body) : undefined
+  });
+
+  var data = {};
+  try { data = await response.json(); } catch (_) {}
+  if (!response.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+async function loadTodayEntry() {
+  if (!apiConfigured()) {
+    setJournalStatus('Set STOIC_API_BASE in this file first (your Vercel URL).', 'err');
+    return;
+  }
+  if (!journalState.token) {
+    setJournalStatus('Locked. Enter passphrase to load and save entries.', '');
+    return;
+  }
+
+  var date = getLocalDateKey();
+  journalState.hydrated = false;
+  setJournalStatus('Loading today\'s entry...', '');
+
+  try {
+    var data = await journalRequest('/api/journal?date=' + date, { method: 'GET' });
+    writeEntryToUI(data.entry || {});
+    journalState.hydrated = true;
+    setJournalStatus('Loaded ' + date + '. Auto-save is on.', 'ok');
+  } catch (error) {
+    if (String(error.message || '').toLowerCase().indexOf('unauthorized') >= 0) {
+      localStorage.removeItem(STOIC_TOKEN_KEY);
+      journalState.token = '';
+      setAuthButtons();
+      setJournalStatus('Session expired. Enter passphrase again.', 'err');
+      return;
+    }
+    setJournalStatus('Could not load today\'s entry: ' + error.message, 'err');
+  }
+}
+
+function scheduleSave() {
+  if (!journalState.token || !journalState.hydrated || journalState.syncing) return;
+  if (journalState.saveTimer) clearTimeout(journalState.saveTimer);
+  journalState.saveTimer = setTimeout(saveTodayEntry, 900);
+}
+
+async function saveTodayEntry() {
+  if (!journalState.token || !journalState.hydrated || journalState.syncing) return;
+  if (!apiConfigured()) return;
+
+  journalState.syncing = true;
+  setJournalStatus('Saving...', '');
+  var date = getLocalDateKey();
+
+  try {
+    await journalRequest('/api/journal?date=' + date, {
+      method: 'PUT',
+      body: { entry: readEntryFromUI() }
+    });
+    setJournalStatus('Saved for ' + date + '.', 'ok');
+  } catch (error) {
+    setJournalStatus('Save failed: ' + error.message, 'err');
+  } finally {
+    journalState.syncing = false;
+  }
+}
+
+async function unlockJournal() {
+  if (!apiConfigured()) {
+    setJournalStatus('Set STOIC_API_BASE in this file first (your Vercel URL).', 'err');
+    return;
+  }
+
+  var input = document.getElementById('journal-passphrase');
+  var passphrase = input ? input.value : '';
+  if (!passphrase) {
+    setJournalStatus('Enter your passphrase first.', 'err');
+    return;
+  }
+
+  setJournalStatus('Unlocking...', '');
+  try {
+    var data = await journalRequest('/api/auth/login', {
+      method: 'POST',
+      body: { passphrase: passphrase }
+    });
+    journalState.token = data.token || '';
+    localStorage.setItem(STOIC_TOKEN_KEY, journalState.token);
+    if (input) input.value = '';
+    setAuthButtons();
+    await loadTodayEntry();
+  } catch (error) {
+    setJournalStatus('Unlock failed: ' + error.message, 'err');
+  }
+}
+
+async function lockJournal() {
+  if (apiConfigured()) {
+    try {
+      await journalRequest('/api/auth/logout', { method: 'POST' });
+    } catch (_) {}
+  }
+  journalState.token = '';
+  journalState.hydrated = false;
+  localStorage.removeItem(STOIC_TOKEN_KEY);
+  setAuthButtons();
+  writeEntryToUI({});
+  setJournalStatus('Locked. Enter passphrase to load and save entries.', '');
+}
+
+function initJournal() {
+  var dateEl = document.getElementById('journal-date');
+  if (dateEl) dateEl.textContent = 'Today: ' + getLocalDateKey();
+
+  var unlock = document.getElementById('journal-unlock');
+  if (unlock) unlock.addEventListener('click', unlockJournal);
+
+  var logout = document.getElementById('journal-logout');
+  if (logout) logout.addEventListener('click', lockJournal);
+
+  var pass = document.getElementById('journal-passphrase');
+  if (pass) {
+    pass.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        unlockJournal();
+      }
+    });
+  }
+
+  document.querySelectorAll('#journal textarea[data-field]').forEach(function(area) {
+    area.addEventListener('input', scheduleSave);
+  });
+
+  setAuthButtons();
+  if (journalState.token) {
+    loadTodayEntry();
+  } else if (!apiConfigured()) {
+    setJournalStatus('Set STOIC_API_BASE in this file first (your Vercel URL).', 'err');
+  }
+}
+
+initJournal();
 </script>
 </body>
 </html>
