@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stoic Daily Toolkit</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f5f4f0;
+  color: #1a1a18;
+  min-height: 100vh;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #26215C 0%, #534AB7 55%, #7F77DD 100%);
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:''; position:absolute; top:-60px; right:-60px;
+  width:260px; height:260px; border-radius:50%;
+  background:rgba(255,255,255,0.05);
+}
+.hero::after {
+  content:''; position:absolute; bottom:-80px; left:-40px;
+  width:220px; height:220px; border-radius:50%;
+  background:rgba(255,255,255,0.04);
+}
+.hero-label {
+  font-size:11px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:.6rem;
+}
+.hero h1 { font-size:2rem; font-weight:700; margin-bottom:.75rem; line-height:1.2; }
+.hero p  { font-size:15px; color:rgba(255,255,255,0.72); max-width:520px; margin:0 auto 1.5rem; line-height:1.65; }
+.hero-quote {
+  display:inline-block;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:12px;
+  padding:.75rem 1.25rem;
+  font-size:13px; font-style:italic;
+  color:rgba(255,255,255,0.85);
+  max-width:480px;
+}
+
+/* NAV TABS */
+.nav {
+  background: white;
+  border-bottom: 1px solid #e8e6e0;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display:none; }
+.nav-btn {
+  flex-shrink: 0;
+  padding: 1rem 1.4rem;
+  font-size: 13px; font-weight: 500;
+  border: none; background: transparent;
+  color: #888780; cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.nav-btn:hover { color: #1a1a18; }
+.nav-btn.active { color: #534AB7; border-bottom-color: #534AB7; }
+
+/* PANELS */
+.panels { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SECTION HEADER */
+.section-head {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 1.5rem;
+}
+.section-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.section-head h2 { font-size: 1.2rem; font-weight: 600; }
+.section-head p  { font-size: 13px; color: #888780; margin-top: 2px; }
+
+/* PRACTICE CARDS */
+.card {
+  background: white;
+  border-radius: 16px;
+  border: 1.5px solid #e8e6e0;
+  padding: 1.25rem 1.4rem;
+  margin-bottom: 14px;
+  transition: box-shadow .2s;
+}
+.card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); }
+
+.card-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: .8rem; }
+.card-badge {
+  font-size: 11px; font-weight: 600; letter-spacing:.05em;
+  padding: 3px 10px; border-radius: 20px; white-space: nowrap; margin-top:2px;
+}
+.badge-morning  { background:#EEEDFE; color:#3C3489; }
+.badge-evening  { background:#EAF3DE; color:#27500A; }
+.badge-moment   { background:#FAEEDA; color:#633806; }
+.badge-weekly   { background:#E6F1FB; color:#0C447C; }
+.badge-control  { background:#FAECE7; color:#712B13; }
+
+.card-title { font-size: 15px; font-weight: 600; line-height: 1.35; }
+.card-body  { font-size: 13.5px; color: #5F5E5A; line-height: 1.7; }
+
+.prompt-box {
+  background: #f5f4f0;
+  border-radius: 10px;
+  border-left: 3px solid #7F77DD;
+  padding: .75rem 1rem;
+  margin-top: .9rem;
+  font-size: 13px;
+  color: #26215C;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* CONTROL CHECK */
+.control-item {
+  background: white;
+  border-radius: 14px;
+  border: 1.5px solid #e8e6e0;
+  padding: .9rem 1.2rem;
+  display: flex; align-items: flex-start; gap: 14px;
+  cursor: pointer; margin-bottom: 10px;
+  transition: all .18s; user-select: none;
+}
+.control-item:hover { border-color: #b4b2a9; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.control-item.mine    { border-color:#1D9E75; background:#f0faf6; }
+.control-item.notmine { border-color:#D85A30; background:#fef6f2; }
+
+.ctrl-dot {
+  width:26px; height:26px; border-radius:50%;
+  border:2px solid #d3d1c7; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700;
+  background:#f5f4f0; transition:all .18s; margin-top:1px;
+}
+.control-item.mine    .ctrl-dot { background:#1D9E75; border-color:#1D9E75; color:white; }
+.control-item.notmine .ctrl-dot { background:#D85A30; border-color:#D85A30; color:white; }
+.ctrl-text  { font-size:13.5px; font-weight:500; color:#1a1a18; margin-bottom:2px; line-height:1.4; }
+.ctrl-sub   { font-size:12px; color:#888780; }
+.control-item.mine    .ctrl-sub { color:#0F6E56; }
+.control-item.notmine .ctrl-sub { color:#993C1D; }
+
+.verdict-box {
+  border-radius:14px; padding:1.1rem 1.4rem;
+  margin:1rem 0; display:none;
+}
+.verdict-box.show { display:block; }
+.verdict-box.v-good  { background:#f0faf6; border:1.5px solid #1D9E75; }
+.verdict-box.v-warn  { background:#fef6f2; border:1.5px solid #D85A30; }
+.verdict-box.v-mixed { background:#FAEEDA; border:1.5px solid #BA7517; }
+.verdict-box h4 { font-size:14px; font-weight:600; margin-bottom:.3rem; }
+.verdict-box.v-good  h4 { color:#085041; }
+.verdict-box.v-warn  h4 { color:#4A1B0C; }
+.verdict-box.v-mixed h4 { color:#412402; }
+.verdict-box p { font-size:13px; line-height:1.6; }
+.verdict-box.v-good  p { color:#0F6E56; }
+.verdict-box.v-warn  p { color:#712B13; }
+.verdict-box.v-mixed p { color:#633806; }
+
+.btn-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:1rem; }
+.btn {
+  padding:8px 20px; border-radius:10px;
+  border:1.5px solid #d3d1c7; background:white;
+  font-size:13px; font-weight:500; cursor:pointer;
+  transition:all .15s; color:#1a1a18;
+}
+.btn:hover { background:#f5f4f0; border-color:#888780; }
+.btn-primary { background:#534AB7; border-color:#534AB7; color:white; }
+.btn-primary:hover { background:#3C3489; border-color:#3C3489; }
+
+/* QUOTES */
+.quote-card {
+  background:white; border-radius:14px;
+  border:1.5px solid #e8e6e0;
+  padding:1.2rem 1.4rem; margin-bottom:12px;
+  border-left:4px solid #7F77DD;
+}
+.quote-text { font-size:14.5px; font-style:italic; color:#1a1a18; line-height:1.7; margin-bottom:.5rem; }
+.quote-attr { font-size:12px; color:#888780; }
+
+/* WEEKLY CARD ACCENT COLORS */
+.card.acc-blue  { border-left: 4px solid #378ADD; }
+.card.acc-green { border-left: 4px solid #1D9E75; }
+.card.acc-amber { border-left: 4px solid #BA7517; }
+.card.acc-coral { border-left: 4px solid #D85A30; }
+
+/* JOURNAL TEXTAREA */
+.journal-card { background:white; border-radius:16px; border:1.5px solid #e8e6e0; padding:1.4rem; margin-bottom:14px; }
+.journal-card h3 { font-size:13px; font-weight:600; color:#534AB7; margin-bottom:.6rem; }
+.journal-card textarea {
+  width:100%; border:1.5px solid #e8e6e0; border-radius:10px;
+  padding:.65rem .9rem; font-family:inherit; font-size:13px;
+  color:#1a1a18; resize:vertical; min-height:72px;
+  background:#fafaf8; transition:border-color .2s; outline:none;
+  line-height:1.6;
+}
+.journal-card textarea:focus { border-color:#7F77DD; background:white; }
+.journal-card textarea::placeholder { color:#b4b2a9; }
+
+/* SUMMARY BAR */
+.summary-bar {
+  background:#1a1a18; border-radius:14px;
+  padding:1.1rem 1.5rem;
+  display:none; align-items:center;
+  justify-content:space-between; gap:16px;
+  flex-wrap:wrap; margin-top:1rem;
+}
+.summary-bar.show { display:flex; }
+.count-group { display:flex; gap:20px; }
+.count-box { text-align:center; }
+.count-num { font-size:22px; font-weight:700; display:block; }
+.mine-num   { color:#5DCAA5; }
+.notmine-num{ color:#F0997B; }
+.count-lbl  { font-size:11px; color:rgba(255,255,255,0.4); }
+.summary-bar p { font-size:13px; color:rgba(255,255,255,0.55); flex:1; min-width:160px; }
+
+/* CALLOUT */
+.callout {
+  background:#EEEDFE; border-radius:12px;
+  padding:1rem 1.2rem; margin-bottom:1.25rem;
+  border:1px solid #AFA9EC;
+  font-size:13px; color:#3C3489; line-height:1.6;
+}
+
+/* RESPONSE GRID */
+.resp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:1.25rem 0; }
+@media(max-width:500px){ .resp-grid { grid-template-columns:1fr; } }
+.resp-card { background:white; border-radius:14px; border:1.5px solid #e8e6e0; padding:1rem 1.1rem; }
+.resp-card h4 { font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; margin-bottom:.5rem; }
+.resp-card.stoic   h4 { color:#0F6E56; }
+.resp-card.reactive h4 { color:#993C1D; }
+.resp-card p { font-size:13px; color:#5F5E5A; line-height:1.55; }
+
+footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b4b2a9; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Ancient wisdom for modern life</div>
+  <h1>Stoic Daily Toolkit</h1>
+  <p>Practical techniques from Epictetus, Marcus Aurelius, and Seneca — organized for morning, evening, and every difficult moment in between.</p>
+  <div class="hero-quote">"You have power over your mind, not outside events. Realize this, and you will find strength." — Marcus Aurelius</div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="show('morning',this)">☀️ Morning</button>
+  <button class="nav-btn" onclick="show('evening',this)">🌙 Evening</button>
+  <button class="nav-btn" onclick="show('moment',this)">⚡ In the moment</button>
+  <button class="nav-btn" onclick="show('control',this)">⚖️ Control check</button>
+  <button class="nav-btn" onclick="show('weekly',this)">📅 Weekly</button>
+  <button class="nav-btn" onclick="show('journal',this)">✍️ Journal</button>
+  <button class="nav-btn" onclick="show('quotes',this)">💬 Carry with you</button>
+</nav>
+
+<div class="panels">
+
+  <!-- MORNING -->
+  <div id="morning" class="panel active">
+    <div class="section-head">
+      <div class="section-icon" style="background:#EEEDFE; font-size:22px;">☀️</div>
+      <div>
+        <h2>Morning routine</h2>
+        <p>5–10 minutes before the day runs away from you</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      Epictetus taught that we should set the mind before setting foot into the world. These three practices take under 10 minutes and change how the entire day lands.
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-morning">Morning · 3 min</span>
+        <div class="card-title">Premeditatio malorum — negative visualisation</div>
+      </div>
+      <div class="card-body">Before starting the day, briefly imagine what could go wrong — traffic, a difficult meeting, a rejected idea, someone being rude. Don't catastrophise. Just acknowledge it calmly as a possibility. This removes the shock of the unexpected and keeps you anchored when reality arrives.</div>
+      <div class="prompt-box">Today I might face: [one challenge]. If it happens, I will respond with patience and reason, not reactivity.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-morning">Morning · 2 min</span>
+        <div class="card-title">Set an intention — role + virtue</div>
+      </div>
+      <div class="card-body">Ask yourself: what role am I playing today? (Engineer, parent, friend, teammate.) What virtue does that role call for — patience, courage, fairness, focused attention? Write one sentence. The Stoics believed that naming your commitment makes you more likely to keep it.</div>
+      <div class="prompt-box">Today, as a [role], I will practice [one virtue] by [specific behavior].</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-morning">Morning · 2 min</span>
+        <div class="card-title">The Stoic question — split your day by control</div>
+      </div>
+      <div class="card-body">Look at your top 2–3 tasks or concerns for the day. For each one, split it: what is up to you, and what is not? Commit your mental energy only to the former. This single habit eliminates a large portion of daily anxiety.</div>
+      <div class="prompt-box">Up to me: my effort, my tone, my preparation.<br>Not up to me: how others react, the outcome, the timeline.</div>
+    </div>
+  </div>
+
+  <!-- EVENING -->
+  <div id="evening" class="panel">
+    <div class="section-head">
+      <div class="section-icon" style="background:#EAF3DE; font-size:22px;">🌙</div>
+      <div>
+        <h2>Evening review</h2>
+        <p>5 minutes — pen and paper preferred</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      Seneca wrote: "I examine my entire day and go back over what I've done and said." Marcus Aurelius filled twelve books doing this. You only need five minutes.
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-evening">Evening · 3 min</span>
+        <div class="card-title">The daily review — Seneca's three questions</div>
+      </div>
+      <div class="card-body">Sit quietly before sleep and run through the day honestly — but with the composure of a student, not the harshness of a judge. The goal is clarity, not guilt. Consistent self-examination is what separates intention from character.</div>
+      <div class="prompt-box">
+        1. What did I do well today?<br>
+        2. Where did I fall short of my own values?<br>
+        3. What would I do differently tomorrow?
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-evening">Evening · 2 min</span>
+        <div class="card-title">Gratitude audit — negative visualisation in reverse</div>
+      </div>
+      <div class="card-body">Imagine losing one thing you took for granted today — your health, your home, a relationship, your ability to do meaningful work. Hold that feeling briefly, then feel the full weight of having it. This is not pessimism. It is the Stoic practice of building genuine, unforced gratitude.</div>
+      <div class="prompt-box">What would today look like without [one thing I have]? I am grateful it was here.</div>
+    </div>
+  </div>
+
+  <!-- IN THE MOMENT -->
+  <div id="moment" class="panel">
+    <div class="section-head">
+      <div class="section-icon" style="background:#FAEEDA; font-size:22px;">⚡</div>
+      <div>
+        <h2>In the moment</h2>
+        <p>Reach for these when something actually happens</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      The Stoics called these "disciplines of assent" — the ability to pause between what happens and how you respond. This is where Stoicism earns its keep.
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-moment">On the spot</span>
+        <div class="card-title">The pause — create a gap between stimulus and response</div>
+      </div>
+      <div class="card-body">When something provokes you — a sharp message, a criticism, an unexpected delay — stop for one breath before reacting. Epictetus called this "withholding assent." You choose whether to let the impression become an action. The pause is the practice. Most damage in life comes from skipping it.</div>
+      <div class="prompt-box">Is this impression (anger, fear, excitement) accurate? Is it mine to act on right now?</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-moment">On the spot</span>
+        <div class="card-title">The view from above — zoom out</div>
+      </div>
+      <div class="card-body">When a problem feels overwhelming, mentally pull back: this moment on a timeline of your week, your year, your decade. Marcus Aurelius practiced this constantly. Most of what feels catastrophic today will be invisible in five years. Does it still deserve the same energy?</div>
+      <div class="prompt-box">Will this matter in a year? In five? What would a wiser, calmer version of me do right now?</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-moment">On the spot</span>
+        <div class="card-title">The Stoic archer — do your best, then release the arrow</div>
+      </div>
+      <div class="card-body">You control training, aim, and technique. You do not control where the arrow lands. Apply this to work: focus on the quality of your input — the preparation, the honesty, the craft — and accept the output with equanimity. Excellence lives in the effort, not the outcome.</div>
+      <div class="prompt-box">Have I done everything within my power here? Then I release the outcome without resentment.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-moment">On the spot</span>
+        <div class="card-title">Other-perspective practice — assume the best motive</div>
+      </div>
+      <div class="card-body">When someone frustrates you, before reacting, ask: what is the most charitable interpretation of why they did this? Marcus Aurelius wrote this to himself constantly. Nine times out of ten, people are rushed, stressed, or simply unaware — not malicious. The assumption of malice is almost always wrong.</div>
+      <div class="prompt-box">What might [person] be dealing with that I can't see? How would I want to be treated if our roles were reversed?</div>
+    </div>
+
+    <div class="resp-grid">
+      <div class="resp-card stoic">
+        <h4>Stoic response</h4>
+        <p>Pause. Classify. Act on what you control. Release the rest without noise or drama.</p>
+      </div>
+      <div class="resp-card reactive">
+        <h4>Reactive response</h4>
+        <p>React immediately. Let the emotion decide. Regret it later. Repeat tomorrow.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROL CHECK -->
+  <div id="control" class="panel">
+    <div class="section-head">
+      <div class="section-icon" style="background:#FAECE7; font-size:22px;">⚖️</div>
+      <div>
+        <h2>Control check</h2>
+        <p>Tap each item — is it truly within your power?</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      The opening line of Epictetus' Enchiridion: "Some things are in our control and others are not." This is the whole philosophy in one sentence. Use this tool whenever you feel anxious or stuck.
+    </div>
+
+    <div id="ctrl-items">
+      <div class="control-item" data-type="mine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">My effort and the quality of my work</div><div class="ctrl-sub">Up to me — my craft, my commitment</div></div>
+      </div>
+      <div class="control-item" data-type="notmine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">Whether my manager approves or praises me</div><div class="ctrl-sub">Not up to me — their judgment, their feelings</div></div>
+      </div>
+      <div class="control-item" data-type="mine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">How I respond when things don't go my way</div><div class="ctrl-sub">Up to me — my reaction is always mine</div></div>
+      </div>
+      <div class="control-item" data-type="notmine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">What other people think or say about me</div><div class="ctrl-sub">Not up to me — their opinions are theirs</div></div>
+      </div>
+      <div class="control-item" data-type="mine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">Whether I seek feedback and act on it honestly</div><div class="ctrl-sub">Up to me — curiosity and growth are choices</div></div>
+      </div>
+      <div class="control-item" data-type="notmine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">Economic conditions, company decisions above me</div><div class="ctrl-sub">Not up to me — the system, not me</div></div>
+      </div>
+      <div class="control-item" data-type="mine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">My values — what I stand for, how I treat people</div><div class="ctrl-sub">Always up to me — protect this above all</div></div>
+      </div>
+      <div class="control-item" data-type="notmine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">The outcome of a project once I've done my part</div><div class="ctrl-sub">Not up to me — release it, archer-style</div></div>
+      </div>
+      <div class="control-item" data-type="mine" onclick="ctrlToggle(this)">
+        <div class="ctrl-dot"></div>
+        <div><div class="ctrl-text">Whether I exercise, rest, and care for my body today</div><div class="ctrl-sub">Up to me — the foundation everything rests on</div></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="ctrlReveal()">Show verdict</button>
+      <button class="btn" onclick="ctrlReset()">Reset</button>
+    </div>
+
+    <div class="verdict-box" id="ctrl-verdict">
+      <h4 id="v-title"></h4>
+      <p id="v-body"></p>
+    </div>
+
+    <div class="summary-bar" id="ctrl-summary">
+      <div class="count-group">
+        <div class="count-box">
+          <span class="count-num mine-num" id="cnt-mine">0</span>
+          <span class="count-lbl">Up to me</span>
+        </div>
+        <div class="count-box">
+          <span class="count-num notmine-num" id="cnt-notmine">0</span>
+          <span class="count-lbl">Not up to me</span>
+        </div>
+      </div>
+      <p id="ctrl-summary-text"></p>
+    </div>
+  </div>
+
+  <!-- WEEKLY -->
+  <div id="weekly" class="panel">
+    <div class="section-head">
+      <div class="section-icon" style="background:#E6F1FB; font-size:22px;">📅</div>
+      <div>
+        <h2>Weekly practice</h2>
+        <p>Pick one per week and do it fully</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      The Stoics believed philosophy was not something you studied — it was something you practiced. These weekly exercises build the muscle of equanimity over time.
+    </div>
+
+    <div class="card acc-blue">
+      <div class="card-top">
+        <span class="card-badge badge-weekly">Weekly</span>
+        <div class="card-title">Voluntary discomfort — practice small hardship</div>
+      </div>
+      <div class="card-body">Once a week, intentionally choose a mild discomfort: skip coffee, take a cold shower, skip a meal, sit in silence for 20 minutes without your phone. Not for punishment — but to remind yourself that you can handle difficulty. And to appreciate comfort with genuine gratitude instead of entitlement.</div>
+      <div class="prompt-box">This week I will voluntarily go without: [one comfort]. I will notice what changes in my mind.</div>
+    </div>
+
+    <div class="card acc-green">
+      <div class="card-top">
+        <span class="card-badge badge-weekly">Weekly</span>
+        <div class="card-title">Letter to your wiser self</div>
+      </div>
+      <div class="card-body">Write a short letter from the wisest, most grounded version of yourself to your current self, about one challenge you're facing. What would that version say about your fears? Your attachments? Your options? This is what Marcus Aurelius was doing in his Meditations — he never meant them to be published. They were letters to himself.</div>
+      <div class="prompt-box">Dear present-me — about [challenge], here is what I think you're missing...</div>
+    </div>
+
+    <div class="card acc-amber">
+      <div class="card-top">
+        <span class="card-badge badge-weekly">Weekly</span>
+        <div class="card-title">The role audit — are you actually showing up?</div>
+      </div>
+      <div class="card-body">List your key roles: colleague, parent, partner, friend, citizen. For each one, rate yourself honestly: did you behave according to your best values this week? Where did you drift? No self-flagellation — just honest accounting. A student who never checks their work never improves.</div>
+      <div class="prompt-box">As a [role], this week I showed up well by: [action]. I fell short by: [action]. Next week I will: [intention].</div>
+    </div>
+
+    <div class="card acc-coral">
+      <div class="card-top">
+        <span class="card-badge badge-weekly">Weekly</span>
+        <div class="card-title">Philosophical reading — 10 minutes, slowly</div>
+      </div>
+      <div class="card-body">Read a short passage from a primary Stoic text. Read slowly. Read twice. Ask: what is the author actually saying beneath the words? Where does it touch my life right now? The goal isn't to finish the book. It's to absorb one idea so thoroughly that it changes how you act.</div>
+      <div class="prompt-box">Start here: Meditations by Marcus Aurelius, Letters from a Stoic by Seneca, or the Enchiridion by Epictetus.</div>
+    </div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div id="journal" class="panel">
+    <div class="section-head">
+      <div class="section-icon" style="background:#f5f4f0; border:1.5px solid #e8e6e0; font-size:22px;">✍️</div>
+      <div>
+        <h2>Stoic journal</h2>
+        <p>Write here — your entries stay private on this page</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      Marcus Aurelius wrote his Meditations entirely as private journal entries — never meant for anyone else. This is the tradition. Write honestly, without performance.
+    </div>
+
+    <div class="journal-card">
+      <h3>Morning intention — today I will practice...</h3>
+      <textarea placeholder="As a [role], I will practice [virtue] by [specific action] today..."></textarea>
+    </div>
+    <div class="journal-card">
+      <h3>What could go wrong today? (and how will I handle it?)</h3>
+      <textarea placeholder="If [difficult thing] happens, I will respond by..."></textarea>
+    </div>
+    <div class="journal-card">
+      <h3>Evening review — what did I do well today?</h3>
+      <textarea placeholder="Honest and specific — even small things count..."></textarea>
+    </div>
+    <div class="journal-card">
+      <h3>Evening review — where did I fall short?</h3>
+      <textarea placeholder="No judgment — just clear observation of what happened and why..."></textarea>
+    </div>
+    <div class="journal-card">
+      <h3>What am I grateful for today that I usually take for granted?</h3>
+      <textarea placeholder="Imagine losing it. Now write about having it..."></textarea>
+    </div>
+    <div class="journal-card">
+      <h3>Free space — write to Epictetus, or to your future self</h3>
+      <textarea style="min-height:120px;" placeholder="Whatever is on your mind — the Stoic tradition is one of honest self-examination, not performance..."></textarea>
+    </div>
+  </div>
+
+  <!-- QUOTES -->
+  <div id="quotes" class="panel">
+    <div class="section-head">
+      <div class="section-icon" style="background:#EEEDFE; font-size:22px;">💬</div>
+      <div>
+        <h2>Carry with you</h2>
+        <p>Pocket philosophy — memorise one and it travels everywhere</p>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-text">"Some things are in our control and others are not. Things in our control are opinion, pursuit, desire, aversion — in a word, whatever are our own actions. Things not in our control are body, reputation, command, and whatever are not our own actions."</div>
+      <div class="quote-attr">— Epictetus, Enchiridion, Opening lines</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"You have power over your mind, not outside events. Realize this, and you will find strength."</div>
+      <div class="quote-attr">— Marcus Aurelius, Meditations</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"We suffer more in imagination than in reality."</div>
+      <div class="quote-attr">— Seneca, Letters from a Stoic</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"First say to yourself what you would be; and then do what you have to do."</div>
+      <div class="quote-attr">— Epictetus</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"Never esteem anything as of advantage to you that will make you break your word or lose your self-respect."</div>
+      <div class="quote-attr">— Marcus Aurelius, Meditations</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"It is not that I'm so smart, it's just that I stay with problems longer."</div>
+      <div class="quote-attr">— Epictetus (on persistence, not cleverness)</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"He who fears death will never do anything worthy of a man who is alive."</div>
+      <div class="quote-attr">— Seneca</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"The impediment to action advances action. What stands in the way becomes the way."</div>
+      <div class="quote-attr">— Marcus Aurelius, Meditations</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"Make the best use of what is in your power, and take the rest as it happens."</div>
+      <div class="quote-attr">— Epictetus</div>
+    </div>
+  </div>
+
+</div><!-- /panels -->
+
+<footer>Built from Pigliucci's <em>How to Be a Stoic</em> &amp; primary texts: Epictetus' <em>Enchiridion</em>, Marcus Aurelius' <em>Meditations</em>, Seneca's <em>Letters from a Stoic</em></footer>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: document.querySelector('.nav').offsetTop, behavior:'smooth'});
+}
+
+var ctrlTapped = new Set();
+function ctrlToggle(el) {
+  var items = Array.from(document.querySelectorAll('.control-item'));
+  var idx = items.indexOf(el);
+  if (ctrlTapped.has(idx)) {
+    ctrlTapped.delete(idx);
+    el.classList.remove('mine','notmine');
+    el.querySelector('.ctrl-dot').textContent = '';
+  } else {
+    ctrlTapped.add(idx);
+    var t = el.dataset.type;
+    el.classList.add(t === 'mine' ? 'mine' : 'notmine');
+    el.querySelector('.ctrl-dot').textContent = t === 'mine' ? '✓' : '–';
+  }
+}
+function ctrlReveal() {
+  if (ctrlTapped.size === 0) { alert('Tap a few items first.'); return; }
+  var items = document.querySelectorAll('.control-item');
+  var mine = 0, notmine = 0;
+  ctrlTapped.forEach(function(i) {
+    items[i].dataset.type === 'mine' ? mine++ : notmine++;
+  });
+  var v = document.getElementById('ctrl-verdict');
+  var vt = document.getElementById('v-title');
+  var vb = document.getElementById('v-body');
+  v.classList.add('show');
+  if (mine > 0 && notmine === 0) {
+    v.className = 'verdict-box show v-good';
+    vt.textContent = 'Strong focus — these are all within your power.';
+    vb.textContent = 'Every item you selected is genuinely up to you. This is exactly where a Stoic directs energy. Commit fully to these, and let the rest unfold without needing to control it.';
+  } else if (notmine > 0 && mine === 0) {
+    v.className = 'verdict-box show v-warn';
+    vt.textContent = 'Redirect your energy — these are all outside your control.';
+    vb.textContent = 'Worrying about things outside your control drains energy without changing outcomes. Ask yourself: what can I actually do today? Start there. The rest is weather — you dress for it, but you don\'t control it.';
+  } else {
+    v.className = 'verdict-box show v-mixed';
+    vt.textContent = 'Mixed — separate them clearly and act only on one column.';
+    vb.textContent = 'You\'ve identified both controllable and uncontrollable factors. The Stoic move: pour your effort into the controllable ones, and practice equanimity about the rest. Don\'t lump them together into one shapeless worry.';
+  }
+  var bar = document.getElementById('ctrl-summary');
+  bar.classList.add('show');
+  document.getElementById('cnt-mine').textContent = mine;
+  document.getElementById('cnt-notmine').textContent = notmine;
+  document.getElementById('ctrl-summary-text').textContent =
+    mine > notmine ? 'Mostly focused on what you can change. The Stoics would approve.' :
+    notmine > mine ? 'More energy going to things outside your control. Rebalance.' :
+    'Balanced awareness — now act only on your column.';
+}
+function ctrlReset() {
+  ctrlTapped.clear();
+  document.querySelectorAll('.control-item').forEach(function(el) {
+    el.classList.remove('mine','notmine');
+    el.querySelector('.ctrl-dot').textContent = '';
+  });
+  var v = document.getElementById('ctrl-verdict');
+  v.className = 'verdict-box';
+  document.getElementById('ctrl-summary').classList.remove('show');
+}
+</script>
+</body>
+</html>
