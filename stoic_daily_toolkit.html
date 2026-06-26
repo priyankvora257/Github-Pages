@@ -1812,6 +1812,7 @@ function initStress() {
 
 var STOIC_API_BASE = 'https://project-8dip5.vercel.app';
 var STOIC_TOKEN_KEY = 'stoic_session_token';
+var STOIC_IDLE_SAVE_MS = 15000;
 var STOIC_QUESTION_IDS = [
   'morning_intention',
   'premeditatio_malorum',
@@ -1825,7 +1826,9 @@ var journalState = {
   token: localStorage.getItem(STOIC_TOKEN_KEY) || '',
   saveTimer: null,
   hydrated: false,
-  syncing: false
+  syncing: false,
+  dirty: false,
+  lastSavedSnapshot: ''
 };
 
 function getLocalDateKey() {
@@ -1883,14 +1886,41 @@ function writeEntryToUI(entry) {
   });
 }
 
+function clearScheduledSave() {
+  if (journalState.saveTimer) {
+    clearTimeout(journalState.saveTimer);
+    journalState.saveTimer = null;
+  }
+}
+
+function getEntrySnapshot(entry) {
+  return JSON.stringify(entry || {});
+}
+
+function setJournalClean(entry) {
+  journalState.lastSavedSnapshot = getEntrySnapshot(entry || readEntryFromUI());
+  journalState.dirty = false;
+  clearScheduledSave();
+}
+
+function refreshJournalDirtyState() {
+  var currentSnapshot;
+  if (!journalState.hydrated) return false;
+  currentSnapshot = getEntrySnapshot(readEntryFromUI());
+  journalState.dirty = currentSnapshot !== journalState.lastSavedSnapshot;
+  return journalState.dirty;
+}
+
 async function journalRequest(path, options) {
   var headers = { 'Content-Type': 'application/json' };
+  options = options || {};
   if (journalState.token) headers.Authorization = 'Bearer ' + journalState.token;
 
   var response = await fetch(STOIC_API_BASE + path, {
     method: options.method,
     headers: headers,
-    body: options.body ? JSON.stringify(options.body) : undefined
+    body: options.body ? JSON.stringify(options.body) : undefined,
+    keepalive: !!options.keepalive
   });
 
   var data = {};
@@ -1917,7 +1947,8 @@ async function loadTodayEntry() {
     var data = await journalRequest('/api/journal?date=' + date, { method: 'GET' });
     writeEntryToUI(data.entry || {});
     journalState.hydrated = true;
-    setJournalStatus('Loaded ' + date + '. Auto-save is on.', 'ok');
+    setJournalClean(data.entry || {});
+    setJournalStatus('Loaded ' + date + '. Auto-save runs after 15s idle or when you leave a field.', 'ok');
   } catch (error) {
     if (String(error.message || '').toLowerCase().indexOf('unauthorized') >= 0) {
       localStorage.removeItem(STOIC_TOKEN_KEY);
@@ -1932,29 +1963,51 @@ async function loadTodayEntry() {
 
 function scheduleSave() {
   if (!journalState.token || !journalState.hydrated || journalState.syncing) return;
-  if (journalState.saveTimer) clearTimeout(journalState.saveTimer);
-  journalState.saveTimer = setTimeout(saveTodayEntry, 900);
+  if (!refreshJournalDirtyState()) {
+    clearScheduledSave();
+    return;
+  }
+  clearScheduledSave();
+  journalState.saveTimer = setTimeout(function() {
+    saveTodayEntry({ quiet: false });
+  }, STOIC_IDLE_SAVE_MS);
 }
 
-async function saveTodayEntry() {
+async function saveTodayEntry(options) {
+  var date;
+  var entry;
+  options = options || {};
   if (!journalState.token || !journalState.hydrated || journalState.syncing) return;
   if (!apiConfigured()) return;
+  if (!refreshJournalDirtyState()) return true;
 
+  clearScheduledSave();
   journalState.syncing = true;
-  setJournalStatus('Saving...', '');
-  var date = getLocalDateKey();
+  if (!options.quiet) setJournalStatus('Saving...', '');
+  date = getLocalDateKey();
+  entry = readEntryFromUI();
 
   try {
     await journalRequest('/api/journal?date=' + date, {
       method: 'PUT',
-      body: { entry: readEntryFromUI() }
+      body: { entry: entry },
+      keepalive: !!options.keepalive
     });
-    setJournalStatus('Saved for ' + date + '.', 'ok');
+    setJournalClean(entry);
+    if (!options.quiet) setJournalStatus('Saved for ' + date + '.', 'ok');
+    return true;
   } catch (error) {
-    setJournalStatus('Save failed: ' + error.message, 'err');
+    if (!options.quiet) setJournalStatus('Save failed: ' + error.message, 'err');
+    return false;
   } finally {
     journalState.syncing = false;
   }
+}
+
+function flushJournalSave(options) {
+  if (!journalState.token || !journalState.hydrated) return;
+  if (!refreshJournalDirtyState()) return;
+  saveTodayEntry(options || {});
 }
 
 async function unlockJournal() {
@@ -1987,13 +2040,21 @@ async function unlockJournal() {
 }
 
 async function lockJournal() {
+  var saveOk = true;
+  if (journalState.token && journalState.hydrated) {
+    saveOk = await saveTodayEntry({ quiet: false });
+  }
+  if (saveOk === false) return;
   if (apiConfigured()) {
     try {
       await journalRequest('/api/auth/logout', { method: 'POST' });
     } catch (_) {}
   }
+  clearScheduledSave();
   journalState.token = '';
   journalState.hydrated = false;
+  journalState.dirty = false;
+  journalState.lastSavedSnapshot = '';
   localStorage.removeItem(STOIC_TOKEN_KEY);
   setAuthButtons();
   writeEntryToUI({});
@@ -2022,6 +2083,18 @@ function initJournal() {
 
   document.querySelectorAll('#journal textarea[data-field]').forEach(function(area) {
     area.addEventListener('input', scheduleSave);
+    area.addEventListener('blur', function() {
+      flushJournalSave({ quiet: false });
+    });
+  });
+
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') {
+      flushJournalSave({ quiet: true, keepalive: true });
+    }
+  });
+  window.addEventListener('pagehide', function() {
+    flushJournalSave({ quiet: true, keepalive: true });
   });
 
   setAuthButtons();
