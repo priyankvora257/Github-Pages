@@ -288,6 +288,30 @@ body {
   padding: .6rem .75rem;
   color: #3c3489;
 }
+.journal-card-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin: -.15rem 0 .5rem;
+}
+.journal-tool-btn {
+  border: 1px solid #e8e6e0;
+  background: #fafaf8;
+  color: #6c6a63;
+  border-radius: 999px;
+  padding: .36rem .7rem;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.journal-tool-btn:hover {
+  color: #534AB7;
+  border-color: #c9c4f7;
+  background: #f6f5fe;
+}
+.journal-tool-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
 .journal-card textarea {
   width:100%; border:1.5px solid #e8e6e0; border-radius:10px;
   padding:.65rem .9rem; font-family:inherit; font-size:13px;
@@ -1451,7 +1475,10 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
           <div class="journal-help-example">Starter: If feedback lands sharply, I will pause, ask one clarifying question, and respond without getting defensive.</div>
         </div>
       </details>
-      <textarea data-field="premeditatio_malorum" disabled placeholder="If [difficult thing] happens, I will respond by..."></textarea>
+      <div class="journal-card-tools">
+        <button type="button" class="journal-tool-btn" data-bullet-target="premeditatio_malorum">• Start bullets</button>
+      </div>
+      <textarea data-field="premeditatio_malorum" data-bullets="true" disabled placeholder="If [difficult thing] happens, I will respond by..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Evening review — what did I do well today?</h3>
@@ -1467,7 +1494,10 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
           <div class="journal-help-example">Starter: I did well when I stayed calm during the difficult conversation instead of trying to win it.</div>
         </div>
       </details>
-      <textarea data-field="evening_well" disabled placeholder="Honest and specific — even small things count..."></textarea>
+      <div class="journal-card-tools">
+        <button type="button" class="journal-tool-btn" data-bullet-target="evening_well">• Start bullets</button>
+      </div>
+      <textarea data-field="evening_well" data-bullets="true" disabled placeholder="Honest and specific — even small things count..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Evening review — where did I fall short?</h3>
@@ -1483,7 +1513,10 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
           <div class="journal-help-example">Starter: I fell short when I rushed that reply because I wanted immediate relief instead of a thoughtful response.</div>
         </div>
       </details>
-      <textarea data-field="evening_shortfall" disabled placeholder="No judgment — just clear observation of what happened and why..."></textarea>
+      <div class="journal-card-tools">
+        <button type="button" class="journal-tool-btn" data-bullet-target="evening_shortfall">• Start bullets</button>
+      </div>
+      <textarea data-field="evening_shortfall" data-bullets="true" disabled placeholder="No judgment — just clear observation of what happened and why..."></textarea>
     </div>
     <div class="journal-card">
       <h3>What am I grateful for today that I usually take for granted?</h3>
@@ -1499,7 +1532,10 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
           <div class="journal-help-example">Starter: I am grateful for my health and energy today because they let me move through the day without needing to think about them.</div>
         </div>
       </details>
-      <textarea data-field="gratitude" disabled placeholder="Imagine losing it. Now write about having it..."></textarea>
+      <div class="journal-card-tools">
+        <button type="button" class="journal-tool-btn" data-bullet-target="gratitude">• Start bullets</button>
+      </div>
+      <textarea data-field="gratitude" data-bullets="true" disabled placeholder="Imagine losing it. Now write about having it..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Free space — write to Epictetus, or to your future self</h3>
@@ -1515,7 +1551,10 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
           <div class="journal-help-example">Starter: If I were writing honestly to my future self, I would admit that what is really bothering me is...</div>
         </div>
       </details>
-      <textarea data-field="free_space" disabled style="min-height:120px;" placeholder="Whatever is on your mind — the Stoic tradition is one of honest self-examination, not performance..."></textarea>
+      <div class="journal-card-tools">
+        <button type="button" class="journal-tool-btn" data-bullet-target="free_space">• Start bullets</button>
+      </div>
+      <textarea data-field="free_space" data-bullets="true" disabled style="min-height:120px;" placeholder="Whatever is on your mind — the Stoic tradition is one of honest self-examination, not performance..."></textarea>
     </div>
   </div>
 
@@ -1980,6 +2019,9 @@ function setJournalInputsDisabled(disabled) {
   document.querySelectorAll('#journal textarea[data-field]').forEach(function(area) {
     area.disabled = disabled;
   });
+  document.querySelectorAll('#journal .journal-tool-btn').forEach(function(btn) {
+    btn.disabled = disabled;
+  });
 }
 
 function setAuthButtons() {
@@ -2008,6 +2050,66 @@ function writeEntryToUI(entry) {
     var area = document.querySelector('#journal textarea[data-field="' + id + '"]');
     if (area) area.value = (entry && typeof entry[id] === 'string') ? entry[id] : '';
   });
+}
+
+function insertBulletLine(area) {
+  var value = area.value;
+  var start = area.selectionStart;
+  var lineStart = value.lastIndexOf('\n', Math.max(0, start - 1)) + 1;
+  var lineEnd = value.indexOf('\n', start);
+  var line = value.slice(lineStart, lineEnd === -1 ? value.length : lineEnd);
+  var nextValue;
+  var cursor;
+
+  if (/^\s*-\s?/.test(line)) {
+    area.focus();
+    return;
+  }
+
+  nextValue = value.slice(0, lineStart) + '- ' + value.slice(lineStart);
+  cursor = start + 2;
+
+  area.value = nextValue;
+  area.focus();
+  area.setSelectionRange(cursor, cursor);
+  scheduleSave();
+}
+
+function handleBulletKeydown(event) {
+  var area = event.target;
+  var value = area.value;
+  var start = area.selectionStart;
+  var end = area.selectionEnd;
+  var lineStart;
+  var lineEnd;
+  var line;
+  var bulletText;
+  var nextValue;
+  var cursor;
+
+  if (event.key !== 'Enter' || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) return;
+  if (start !== end) return;
+
+  lineStart = value.lastIndexOf('\n', Math.max(0, start - 1)) + 1;
+  lineEnd = value.indexOf('\n', start);
+  if (lineEnd === -1) lineEnd = value.length;
+  line = value.slice(lineStart, lineEnd);
+  if (!/^\s*-\s?/.test(line)) return;
+
+  event.preventDefault();
+  bulletText = line.replace(/^\s*-\s?/, '');
+
+  if (bulletText.trim() === '') {
+    nextValue = value.slice(0, lineStart) + value.slice(lineEnd);
+    cursor = lineStart;
+  } else {
+    nextValue = value.slice(0, start) + '\n- ' + value.slice(start);
+    cursor = start + 3;
+  }
+
+  area.value = nextValue;
+  area.setSelectionRange(cursor, cursor);
+  scheduleSave();
 }
 
 function clearScheduledSave() {
@@ -2205,11 +2307,22 @@ function initJournal() {
     });
   }
 
+  document.querySelectorAll('#journal .journal-tool-btn[data-bullet-target]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = document.querySelector('#journal textarea[data-field="' + btn.dataset.bulletTarget + '"]');
+      if (!target || target.disabled) return;
+      insertBulletLine(target);
+    });
+  });
+
   document.querySelectorAll('#journal textarea[data-field]').forEach(function(area) {
     area.addEventListener('input', scheduleSave);
     area.addEventListener('blur', function() {
       flushJournalSave({ quiet: false });
     });
+    if (area.dataset.bullets === 'true') {
+      area.addEventListener('keydown', handleBulletKeydown);
+    }
   });
 
   document.addEventListener('visibilitychange', function() {
