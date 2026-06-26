@@ -983,7 +983,7 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
     <div id="stress-phase-system" class="stress-phase active">
       <div class="section-label">Dat's complete stress resiliency system — 5 skills</div>
       <div class="stress-skill-row">
-        <button class="stress-skill-pill" onclick="stressShowSkill(0)">
+        <button class="stress-skill-pill active" onclick="stressShowSkill(0)">
           <div class="stress-skill-pill-num">1</div>
           <div class="stress-skill-pill-name">Stress Magic</div>
         </button>
@@ -991,7 +991,7 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
           <div class="stress-skill-pill-num">2</div>
           <div class="stress-skill-pill-name">Strengthen</div>
         </button>
-        <button class="stress-skill-pill active" onclick="stressShowSkill(2)">
+        <button class="stress-skill-pill" onclick="stressShowSkill(2)">
           <div class="stress-skill-pill-num">3</div>
           <div class="stress-skill-pill-name">Stretch</div>
         </button>
@@ -1970,7 +1970,7 @@ function stressRunBreath(phaseIndex, repsLeft) {
 }
 
 function initStress() {
-  stressShowSkill(2);
+  stressShowSkill(0);
 }
 
 var STOIC_API_BASE = 'https://project-8dip5.vercel.app';
