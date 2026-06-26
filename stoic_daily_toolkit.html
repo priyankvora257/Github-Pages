@@ -236,6 +236,58 @@ body {
 /* JOURNAL TEXTAREA */
 .journal-card { background:white; border-radius:16px; border:1.5px solid #e8e6e0; padding:1.4rem; margin-bottom:14px; }
 .journal-card h3 { font-size:13px; font-weight:600; color:#534AB7; margin-bottom:.6rem; }
+.journal-help {
+  margin: -.05rem 0 .85rem;
+  border: 1px solid #eceae4;
+  border-radius: 12px;
+  background: #fafaf8;
+  overflow: hidden;
+}
+.journal-help summary {
+  list-style: none;
+  cursor: pointer;
+  padding: .7rem .9rem;
+  font-size: 12px;
+  color: #6c6a63;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.journal-help summary::-webkit-details-marker { display:none; }
+.journal-help summary strong {
+  color: #534AB7;
+  font-weight: 600;
+}
+.journal-help summary span {
+  color: #9a978d;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.journal-help[open] summary {
+  border-bottom: 1px solid #eceae4;
+  background: #f7f6f2;
+}
+.journal-help-body {
+  padding: .8rem .95rem .9rem;
+  font-size: 12px;
+  color: #5f5e5a;
+  line-height: 1.65;
+}
+.journal-help-body p { margin-bottom: .45rem; }
+.journal-help-body ul {
+  margin: 0 0 .55rem 1rem;
+  padding: 0;
+}
+.journal-help-body li { margin-bottom: .22rem; }
+.journal-help-example {
+  background: white;
+  border: 1px solid #e8e6e0;
+  border-left: 3px solid #a79fee;
+  border-radius: 10px;
+  padding: .6rem .75rem;
+  color: #3c3489;
+}
 .journal-card textarea {
   width:100%; border:1.5px solid #e8e6e0; border-radius:10px;
   padding:.65rem .9rem; font-family:inherit; font-size:13px;
@@ -1371,26 +1423,98 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
 
     <div class="journal-card">
       <h3>Morning intention — today I will practice...</h3>
+      <details class="journal-help">
+        <summary><strong>Need help writing?</strong> Pick one role, one virtue, one action. <span>Tap to expand</span></summary>
+        <div class="journal-help-body">
+          <p>Keep this concrete. The goal is not to sound wise. The goal is to choose one behavior you can actually live out today.</p>
+          <ul>
+            <li>What role matters most today — teammate, parent, partner, friend?</li>
+            <li>What virtue does that role need most — patience, courage, fairness, focus?</li>
+            <li>What exact action would show that virtue in real life?</li>
+          </ul>
+          <div class="journal-help-example">Starter: As a teammate, I will practice patience by listening fully before I reply in meetings today.</div>
+        </div>
+      </details>
       <textarea data-field="morning_intention" disabled placeholder="As a [role], I will practice [virtue] by [specific action] today..."></textarea>
     </div>
     <div class="journal-card">
       <h3>What could go wrong today? (and how will I handle it?)</h3>
+      <details class="journal-help">
+        <summary><strong>Need help writing?</strong> Name likely friction, not fantasy disasters. <span>Tap to expand</span></summary>
+        <div class="journal-help-body">
+          <p>This is Stoic preparation, not catastrophizing. Pick realistic points of friction and decide your response before emotion takes over.</p>
+          <ul>
+            <li>What meeting, person, or task may test me today?</li>
+            <li>What emotion will probably show up — irritation, fear, self-doubt, impatience?</li>
+            <li>What would a calm Stoic response look like in that moment?</li>
+          </ul>
+          <div class="journal-help-example">Starter: If feedback lands sharply, I will pause, ask one clarifying question, and respond without getting defensive.</div>
+        </div>
+      </details>
       <textarea data-field="premeditatio_malorum" disabled placeholder="If [difficult thing] happens, I will respond by..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Evening review — what did I do well today?</h3>
+      <details class="journal-help">
+        <summary><strong>Need help writing?</strong> Record specific actions, not vague feelings. <span>Tap to expand</span></summary>
+        <div class="journal-help-body">
+          <p>Do not write “it was a good day.” Capture evidence. What did you actually do that reflected your values?</p>
+          <ul>
+            <li>Where did I show restraint when I could have reacted?</li>
+            <li>Where was I courageous, honest, or steady?</li>
+            <li>What small action today would make my wiser self nod in approval?</li>
+          </ul>
+          <div class="journal-help-example">Starter: I did well when I stayed calm during the difficult conversation instead of trying to win it.</div>
+        </div>
+      </details>
       <textarea data-field="evening_well" disabled placeholder="Honest and specific — even small things count..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Evening review — where did I fall short?</h3>
+      <details class="journal-help">
+        <summary><strong>Need help writing?</strong> Observe clearly, without attacking yourself. <span>Tap to expand</span></summary>
+        <div class="journal-help-body">
+          <p>This is not a guilt exercise. It is clean observation. The more specific you are, the more useful tomorrow becomes.</p>
+          <ul>
+            <li>What triggered me or pulled me off center?</li>
+            <li>What story did I believe in that moment?</li>
+            <li>What would wiser behavior have looked like instead?</li>
+          </ul>
+          <div class="journal-help-example">Starter: I fell short when I rushed that reply because I wanted immediate relief instead of a thoughtful response.</div>
+        </div>
+      </details>
       <textarea data-field="evening_shortfall" disabled placeholder="No judgment — just clear observation of what happened and why..."></textarea>
     </div>
     <div class="journal-card">
       <h3>What am I grateful for today that I usually take for granted?</h3>
+      <details class="journal-help">
+        <summary><strong>Need help writing?</strong> Focus on ordinary things you normally overlook. <span>Tap to expand</span></summary>
+        <div class="journal-help-body">
+          <p>Stoic gratitude gets stronger when you imagine losing the thing first. Look for quiet supports, not only big wins.</p>
+          <ul>
+            <li>What worked silently in the background of my day?</li>
+            <li>What would I miss immediately if it disappeared tomorrow?</li>
+            <li>What support, health, or stability did I benefit from without noticing?</li>
+          </ul>
+          <div class="journal-help-example">Starter: I am grateful for my health and energy today because they let me move through the day without needing to think about them.</div>
+        </div>
+      </details>
       <textarea data-field="gratitude" disabled placeholder="Imagine losing it. Now write about having it..."></textarea>
     </div>
     <div class="journal-card">
       <h3>Free space — write to Epictetus, or to your future self</h3>
+      <details class="journal-help">
+        <summary><strong>Need help writing?</strong> Use this for mental clearing, truth-telling, or a letter to yourself. <span>Tap to expand</span></summary>
+        <div class="journal-help-body">
+          <p>This is your private room. Put down what is unresolved, what you are avoiding, or what you need your future self to remember.</p>
+          <ul>
+            <li>What is still sitting heavily in my mind?</li>
+            <li>What truth am I avoiding because it is uncomfortable?</li>
+            <li>What do I most need to remember tomorrow?</li>
+          </ul>
+          <div class="journal-help-example">Starter: If I were writing honestly to my future self, I would admit that what is really bothering me is...</div>
+        </div>
+      </details>
       <textarea data-field="free_space" disabled style="min-height:120px;" placeholder="Whatever is on your mind — the Stoic tradition is one of honest self-examination, not performance..."></textarea>
     </div>
   </div>
