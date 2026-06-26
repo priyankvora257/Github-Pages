@@ -55,26 +55,56 @@ body {
 }
 
 /* NAV TABS */
-.nav {
+.nav-shell {
   background: white;
   border-bottom: 1px solid #e8e6e0;
   position: sticky; top: 0; z-index: 100;
+}
+.nav {
   display: flex; overflow-x: auto;
   scrollbar-width: none;
 }
 .nav::-webkit-scrollbar { display:none; }
 .nav-btn {
   flex-shrink: 0;
-  padding: 1rem 1.4rem;
   font-size: 13px; font-weight: 500;
-  border: none; background: transparent;
+  border: 1px solid transparent; background: transparent;
   color: #888780; cursor: pointer;
-  border-bottom: 2.5px solid transparent;
   transition: all .15s;
   white-space: nowrap;
 }
+.nav-main {
+  gap: 8px;
+  padding: .75rem .9rem .45rem;
+}
+.nav-sub {
+  gap: 8px;
+  padding: 0 .9rem .7rem;
+  background: #fafaf8;
+  border-top: 1px solid #f0eee8;
+}
+.main-btn {
+  padding: .65rem .95rem;
+  border-radius: 999px;
+  background: white;
+  border-color: #e8e6e0;
+}
+.sub-btn {
+  padding: .7rem .95rem;
+  border-radius: 12px;
+}
 .nav-btn:hover { color: #1a1a18; }
-.nav-btn.active { color: #534AB7; border-bottom-color: #534AB7; }
+.main-btn.active {
+  color: #534AB7;
+  border-color: #c9c4f7;
+  background: #eeedfe;
+}
+.sub-btn.active {
+  color: #534AB7;
+  border-color: #e8e6e0;
+  background: white;
+  box-shadow: 0 2px 8px rgba(38,33,92,0.06);
+}
 
 /* PANELS */
 .panels { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
@@ -262,6 +292,346 @@ body {
   font-size:13px; color:#3C3489; line-height:1.6;
 }
 
+/* STRESS RESILIENCY */
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #888780;
+  margin-bottom: .9rem;
+}
+.stress-mode-bar,
+.stress-skill-row,
+.stress-levels {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.stress-mode-bar { margin-bottom: 1rem; }
+.stress-mode-btn,
+.stress-skill-pill,
+.stress-level {
+  border: 1px solid #e8e6e0;
+  background: white;
+  color: #5f5e5a;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.stress-mode-btn {
+  flex: 1;
+  min-width: 112px;
+  padding: .75rem .8rem;
+  font-size: 12px;
+  font-weight: 600;
+}
+.stress-mode-btn.active {
+  background: #eeedfe;
+  border-color: #c9c4f7;
+  color: #534AB7;
+}
+.stress-phase { display: none; }
+.stress-phase.active { display: block; }
+.stress-skill-row {
+  margin-bottom: 1rem;
+}
+.stress-skill-pill {
+  flex: 1;
+  min-width: 104px;
+  padding: .7rem .55rem;
+  text-align: center;
+}
+.stress-skill-pill.active {
+  border-color: #c9c4f7;
+  background: #eeedfe;
+}
+.stress-skill-pill-num {
+  font-size: 10px;
+  color: #888780;
+  margin-bottom: 3px;
+}
+.stress-skill-pill-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a1a18;
+}
+.stress-skill-pill.active .stress-skill-pill-name { color: #534AB7; }
+.stress-detail-grid,
+.stress-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.stress-detail-panel {
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+}
+.stress-mini-card {
+  background: white;
+  border: 1px solid #e8e6e0;
+  border-radius: 14px;
+  padding: .85rem 1rem;
+}
+.stress-mini-card h4 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #888780;
+  margin-bottom: 5px;
+}
+.stress-mini-card p,
+.stress-note,
+.stress-level-examples,
+.stress-card-body p {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #5f5e5a;
+}
+.stress-note {
+  background: #fafaf8;
+  border: 1px solid #e8e6e0;
+  border-radius: 14px;
+  padding: .9rem 1rem;
+  margin-bottom: 1rem;
+}
+.stress-cards.single {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.stress-card {
+  background: white;
+  border: 1.5px solid #e8e6e0;
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  cursor: pointer;
+}
+.stress-card.open { border-color: #c9c4f7; box-shadow: 0 4px 16px rgba(38,33,92,0.08); }
+.stress-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.stress-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.stress-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a18;
+}
+.stress-card-sub {
+  font-size: 11.5px;
+  color: #888780;
+  margin-top: 2px;
+  line-height: 1.5;
+}
+.stress-card-body {
+  display: none;
+  margin-top: .9rem;
+  padding-top: .9rem;
+  border-top: 1px solid #efede7;
+}
+.stress-card.open .stress-card-body { display: block; }
+.stress-qbox {
+  background: #f5f4f0;
+  border-left: 3px solid #7F77DD;
+  border-radius: 0 12px 12px 0;
+  padding: .75rem 1rem;
+  margin: .75rem 0;
+  color: #26215C;
+  font-size: 12.5px;
+  line-height: 1.65;
+  font-style: italic;
+}
+.stress-steps,
+.stress-inline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.stress-inline-step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.stress-step-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #d3d1c7;
+  background: #fafaf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #888780;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.stress-inline-step-text {
+  font-size: 12.5px;
+  color: #5f5e5a;
+  line-height: 1.6;
+}
+.stress-tags,
+.stress-compound {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: .7rem 0;
+}
+.stress-tag,
+.stress-pill {
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.stress-tag.dat,
+.stress-pill.green { background: #e1f5ee; color: #0F6E56; }
+.stress-tag.stoic,
+.stress-pill.purple { background: #eeedfe; color: #534AB7; }
+.stress-tag.freq,
+.stress-pill.amber { background: #faeeda; color: #854F0B; }
+.stress-pill { background: #fafaf8; color: #5f5e5a; border: 1px solid #e8e6e0; }
+.stress-compound-arrow { color: #888780; font-size: 12px; align-self: center; }
+.stress-stretch-step {
+  border: 1px solid #e8e6e0;
+  border-radius: 14px;
+  background: white;
+  padding: .85rem .95rem;
+  cursor: pointer;
+}
+.stress-stretch-step.active { border-color: #c9c4f7; background: #faf9ff; }
+.stress-stretch-top {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.stress-stretch-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #d3d1c7;
+  background: #fafaf8;
+  color: #5f5e5a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.stress-stretch-step.active .stress-stretch-num {
+  background: #534AB7;
+  border-color: #534AB7;
+  color: white;
+}
+.stress-stretch-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a18;
+}
+.stress-stretch-badge {
+  display: inline-block;
+  margin-left: 6px;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #fafaf8;
+  border: 1px solid #e8e6e0;
+  color: #888780;
+  font-size: 10px;
+  font-weight: 700;
+}
+.stress-stretch-detail {
+  display: none;
+  margin-top: .7rem;
+  padding-top: .7rem;
+  border-top: 1px solid #efede7;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #5f5e5a;
+}
+.stress-stretch-step.active .stress-stretch-detail { display: block; }
+.stress-level {
+  flex: 1;
+  min-width: 72px;
+  text-align: center;
+  padding: .55rem .35rem;
+  font-size: 12px;
+  font-weight: 600;
+}
+.stress-level.active {
+  background: #534AB7;
+  border-color: #534AB7;
+  color: white;
+}
+.stress-level-examples {
+  display: none;
+  margin-top: .6rem;
+}
+.stress-level-examples.show { display: block; }
+.stress-tracker {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: .75rem;
+}
+.stress-day-dot {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid #e8e6e0;
+  background: #fafaf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #888780;
+  cursor: pointer;
+}
+.stress-day-dot.done {
+  background: #0F6E56;
+  border-color: #0F6E56;
+  color: white;
+}
+.stress-timer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: .75rem;
+}
+.stress-timer-btn {
+  padding: .45rem .9rem;
+  border-radius: 10px;
+  border: 1px solid #d3d1c7;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+.stress-timer-display {
+  min-width: 68px;
+  font-size: 12.5px;
+  color: #888780;
+  font-variant-numeric: tabular-nums;
+}
+@media(max-width:640px) {
+  .stress-detail-grid,
+  .stress-grid { grid-template-columns: 1fr; }
+}
+
 /* RESPONSE GRID */
 .resp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:1.25rem 0; }
 @media(max-width:500px){ .resp-grid { grid-template-columns:1fr; } }
@@ -283,15 +653,14 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
   <div class="hero-quote">"You have power over your mind, not outside events. Realize this, and you will find strength." — Marcus Aurelius</div>
 </div>
 
-<nav class="nav">
-  <button class="nav-btn active" onclick="show('morning',this)">☀️ Morning</button>
-  <button class="nav-btn" onclick="show('evening',this)">🌙 Evening</button>
-  <button class="nav-btn" onclick="show('moment',this)">⚡ In the moment</button>
-  <button class="nav-btn" onclick="show('control',this)">⚖️ Control check</button>
-  <button class="nav-btn" onclick="show('weekly',this)">📅 Weekly</button>
-  <button class="nav-btn" onclick="show('journal',this)">✍️ Journal</button>
-  <button class="nav-btn" onclick="show('quotes',this)">💬 Carry with you</button>
-</nav>
+<div class="nav-shell">
+  <nav class="nav nav-main">
+    <button class="nav-btn main-btn active" data-section="rituals" onclick="showSection('rituals', this)">Daily rituals</button>
+    <button class="nav-btn main-btn" data-section="tools" onclick="showSection('tools', this)">Mental tools</button>
+    <button class="nav-btn main-btn" data-section="reflection" onclick="showSection('reflection', this)">Reflection</button>
+  </nav>
+  <nav class="nav nav-sub" id="subnav" aria-label="Toolkit practices"></nav>
+</div>
 
 <div class="panels">
 
@@ -514,6 +883,414 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
     </div>
   </div>
 
+  <!-- STRESS RESILIENCY -->
+  <div id="stress" class="panel">
+    <div class="section-head">
+      <div class="section-icon" style="background:#FAECE7; font-size:22px;">🌀</div>
+      <div>
+        <h2>Stress resiliency</h2>
+        <p>Build capacity, interrupt reactivity, and recover faster</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      This integrates your stress resiliency system into the Stoic toolkit: reframe the signal, stretch capacity on purpose, and use practical resets when stress is happening right now.
+    </div>
+
+    <div class="stress-mode-bar">
+      <button class="stress-mode-btn active" onclick="stressSetMode('system', this)">5-skill system</button>
+      <button class="stress-mode-btn" onclick="stressSetMode('stretch', this)">Stretch skill</button>
+      <button class="stress-mode-btn" onclick="stressSetMode('plan', this)">6-month plan</button>
+      <button class="stress-mode-btn" onclick="stressSetMode('sos', this)">Right now</button>
+    </div>
+
+    <div id="stress-phase-system" class="stress-phase active">
+      <div class="section-label">Dat's complete stress resiliency system — 5 skills</div>
+      <div class="stress-skill-row">
+        <button class="stress-skill-pill" onclick="stressShowSkill(0)">
+          <div class="stress-skill-pill-num">1</div>
+          <div class="stress-skill-pill-name">Stress Magic</div>
+        </button>
+        <button class="stress-skill-pill" onclick="stressShowSkill(1)">
+          <div class="stress-skill-pill-num">2</div>
+          <div class="stress-skill-pill-name">Strengthen</div>
+        </button>
+        <button class="stress-skill-pill active" onclick="stressShowSkill(2)">
+          <div class="stress-skill-pill-num">3</div>
+          <div class="stress-skill-pill-name">Stretch</div>
+        </button>
+        <button class="stress-skill-pill" onclick="stressShowSkill(3)">
+          <div class="stress-skill-pill-num">4</div>
+          <div class="stress-skill-pill-name">Soothe</div>
+        </button>
+        <button class="stress-skill-pill" onclick="stressShowSkill(4)">
+          <div class="stress-skill-pill-num">5</div>
+          <div class="stress-skill-pill-name">Release</div>
+        </button>
+      </div>
+      <div id="stress-skill-detail"></div>
+    </div>
+
+    <div id="stress-phase-stretch" class="stress-phase">
+      <div class="section-label">Stretch — skill #3 · how to make the impossible your new normal</div>
+
+      <div class="stress-note">
+        <strong style="color:#1a1a18;">Core idea:</strong> Strengthening happens inside your comfort zone. Stretching happens outside it. That is where the growth lives. Your ceiling is mostly learned, and this flow helps you move past it.
+      </div>
+
+      <div class="stress-steps">
+        <div class="stress-stretch-step" onclick="stressToggleStep(this)">
+          <div class="stress-stretch-top">
+            <div class="stress-stretch-num">1</div>
+            <div>
+              <div class="stress-stretch-title">Spot your ceiling <span class="stress-stretch-badge">Awareness</span></div>
+            </div>
+          </div>
+          <div class="stress-stretch-detail">
+            Where do you feel stuck? Where do you want more but something invisible is holding you back? The ceiling may not be real, but it feels real until you challenge it.
+            <div class="stress-tags">
+              <span class="stress-tag dat">Work</span>
+              <span class="stress-tag dat">Health</span>
+              <span class="stress-tag dat">Relationships</span>
+              <span class="stress-tag dat">Growth</span>
+            </div>
+            <div class="stress-qbox" style="font-style:normal;">Where in my life am I settling for less because I am not sure I can handle more?</div>
+          </div>
+        </div>
+
+        <div class="stress-stretch-step" onclick="stressToggleStep(this)">
+          <div class="stress-stretch-top">
+            <div class="stress-stretch-num">2</div>
+            <div>
+              <div class="stress-stretch-title">Name the limiting belief <span class="stress-stretch-badge">Belief mapping</span></div>
+            </div>
+          </div>
+          <div class="stress-stretch-detail">
+            What is your mind telling you? Get specific. The belief only keeps power while it stays vague and unnamed.
+            <div class="stress-tags">
+              <span class="stress-tag freq">I can't</span>
+              <span class="stress-tag freq">I'm not ready</span>
+              <span class="stress-tag freq">Not for me</span>
+              <span class="stress-tag freq">I'll fail</span>
+            </div>
+            <div class="stress-qbox" style="font-style:normal;">The story I am telling myself about this is: ___. Is that actually true, or just a pattern my emotional brain learned?</div>
+          </div>
+        </div>
+
+        <div class="stress-stretch-step" onclick="stressToggleStep(this)">
+          <div class="stress-stretch-top">
+            <div class="stress-stretch-num">3</div>
+            <div>
+              <div class="stress-stretch-title">Choose your stretch <span class="stress-stretch-badge">Selection</span></div>
+            </div>
+          </div>
+          <div class="stress-stretch-detail">
+            Pick one activity that directly challenges the belief from step 2. Rank it by discomfort level so you know what edge you are training.
+            <div class="stress-levels" id="stress-level-selector">
+              <button class="stress-level" onclick="stressPickLevel(0)">Level 1</button>
+              <button class="stress-level" onclick="stressPickLevel(1)">Level 2</button>
+              <button class="stress-level" onclick="stressPickLevel(2)">Level 3</button>
+              <button class="stress-level" onclick="stressPickLevel(3)">Level 4</button>
+              <button class="stress-level" onclick="stressPickLevel(4)">Level 5</button>
+            </div>
+            <div class="stress-level-examples" id="stress-level-examples"></div>
+          </div>
+        </div>
+
+        <div class="stress-stretch-step" onclick="stressToggleStep(this)">
+          <div class="stress-stretch-top">
+            <div class="stress-stretch-num">4</div>
+            <div>
+              <div class="stress-stretch-title">Feel the resistance and do it anyway <span class="stress-stretch-badge">Override</span></div>
+            </div>
+          </div>
+          <div class="stress-stretch-detail">
+            Your mind will scream. You will want to bail. That resistance is a signal that you are at the edge, not a reason to stop.
+            <div class="stress-compound">
+              <span class="stress-pill amber">Fear</span>
+              <span class="stress-compound-arrow">+</span>
+              <span class="stress-pill amber">Doubt</span>
+              <span class="stress-compound-arrow">+</span>
+              <span class="stress-pill amber">Avoidance urge</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill green">Action anyway</span>
+            </div>
+            <div class="stress-qbox" style="font-style:normal;">The resistance I feel right now is proof I am at my edge. Edges are exactly where capacity grows.</div>
+          </div>
+        </div>
+
+        <div class="stress-stretch-step" onclick="stressToggleStep(this)">
+          <div class="stress-stretch-top">
+            <div class="stress-stretch-num">5</div>
+            <div>
+              <div class="stress-stretch-title">Notice what changed <span class="stress-stretch-badge">Expansion</span></div>
+            </div>
+          </div>
+          <div class="stress-stretch-detail">
+            After you do it, pay attention. That rush of I actually did it is your comfort zone expanding in real time.
+            <div class="stress-tags">
+              <span class="stress-tag dat">Confidence</span>
+              <span class="stress-tag dat">Capacity</span>
+              <span class="stress-tag dat">Proof</span>
+            </div>
+            <div class="stress-qbox" style="font-style:normal;">Your emotional brain does not believe affirmations. It believes evidence. Write down one piece of evidence you just created.</div>
+          </div>
+        </div>
+
+        <div class="stress-stretch-step" onclick="stressToggleStep(this)">
+          <div class="stress-stretch-top">
+            <div class="stress-stretch-num">6</div>
+            <div>
+              <div class="stress-stretch-title">Watch it compound <span class="stress-stretch-badge">Compound</span></div>
+            </div>
+          </div>
+          <div class="stress-stretch-detail">
+            What stretches you today strengthens you next month and soothes you next year. Capacity compounds.
+            <div class="stress-compound">
+              <span class="stress-pill">Do it 1×</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill purple">Stretch</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill">Do it 10×</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill green">Strengthen</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill">Do it 100×</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill amber">Soothe</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stress-stretch-step" onclick="stressToggleStep(this)">
+          <div class="stress-stretch-top">
+            <div class="stress-stretch-num">7</div>
+            <div>
+              <div class="stress-stretch-title">Become unstoppable <span class="stress-stretch-badge">Transformation</span></div>
+            </div>
+          </div>
+          <div class="stress-stretch-detail">
+            Your comfort zone becomes so large that yesterday's stretch starts to feel like today's warm-up. You are not just managing stress anymore. You are using it.
+            <div class="stress-tags">
+              <span class="stress-tag dat">New baseline</span>
+              <span class="stress-tag dat">Expanded capacity</span>
+              <span class="stress-tag dat">Unstoppable</span>
+            </div>
+            <div class="stress-qbox" style="font-style:normal;">You are not managing stress anymore. You are using it.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stress-note" style="margin-top:1rem;">
+        <strong style="color:#1a1a18;">Stoic crosswalk:</strong> Step 1–2 mirrors Epictetus: examine the impression before acting on it. Step 4 is Stoic assent in action. Step 5 builds Marcus-style evidence through action. Step 6 echoes Seneca's voluntary hardship becoming equanimity.
+      </div>
+    </div>
+
+    <div id="stress-phase-plan" class="stress-phase">
+      <div class="section-label">The 6-month system — Dat's 5 practices</div>
+      <div class="stress-qbox">The best way to manage your stress is not to reduce or avoid stress, but rather to rethink and even embrace it.</div>
+
+      <div class="stress-cards single">
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#EEEDFE;">💪</div>
+            <div>
+              <div class="stress-card-title">Do hard things on purpose</div>
+              <div class="stress-card-sub">At least 3× per week · especially when you do not feel ready</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <div class="stress-tags">
+              <span class="stress-tag freq">3×/week minimum</span>
+              <span class="stress-tag dat">Especially when not ready</span>
+            </div>
+            <p>Your emotional brain believes evidence, not affirmations. Each hard thing you do is proof deposited in your resilience account.</p>
+            <div class="stress-qbox">The key to becoming more resilient is to deliberately expose yourself to controlled amounts of stress and learn to manage your internal state.</div>
+            <div class="stress-inline-step"><div class="stress-step-num">→</div><div class="stress-inline-step-text">Do hard things even when you do not feel ready. Especially when you do not feel ready.</div></div>
+            <div style="margin-top:.75rem; font-size:12px; font-weight:600; color:#5f5e5a;">Track this week</div>
+            <div class="stress-tracker">
+              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">M</div>
+              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">T</div>
+              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">W</div>
+              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">T</div>
+              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">F</div>
+              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">S</div>
+              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">S</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#E1F5EE;">🚶</div>
+            <div>
+              <div class="stress-card-title">Step into discomfort</div>
+              <div class="stress-card-sub">Once per week · scheduled, not when the stars align</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <div class="stress-tags">
+              <span class="stress-tag freq">1×/week</span>
+              <span class="stress-tag stoic">Voluntary hardship</span>
+            </div>
+            <p>Your comfort zone is dynamic. The more you avoid stepping out, the more your brain stresses when life asks for more. The more you step out, the larger it gets.</p>
+            <div class="stress-qbox">You can choose courage or you can choose comfort, but you cannot choose both.</div>
+            <div class="stress-inline-step"><div class="stress-step-num">·</div><div class="stress-inline-step-text">Have the conversation you are avoiding.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">·</div><div class="stress-inline-step-text">Speak up in the meeting when your heart is pounding.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">·</div><div class="stress-inline-step-text">Post the vulnerable thing. Try the workout that intimidates you.</div></div>
+          </div>
+        </div>
+
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#FAEEDA;">🌀</div>
+            <div>
+              <div class="stress-card-title">Release stress daily</div>
+              <div class="stress-card-sub">Every single day · 15 min minimum, never skip</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <div class="stress-tags">
+              <span class="stress-tag freq">Daily · non-negotiable</span>
+              <span class="stress-tag stoic">Seneca: tranquility</span>
+            </div>
+            <p>Postponed stress accumulates. Create space to release before you walk through the door at home.</p>
+            <div class="stress-qbox">Two hours fully present is infinitely more valuable than four hours with stress running the show.</div>
+            <div class="stress-inline-step"><div class="stress-step-num">·</div><div class="stress-inline-step-text">Walk, run, gym — let stress move through you.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">·</div><div class="stress-inline-step-text">Sit in silence. Listen to music.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">·</div><div class="stress-inline-step-text">15 min minimum. Sometimes longer. Never skip.</div></div>
+            <div class="stress-timer-row">
+              <button class="stress-timer-btn" onclick="stressStartTimer(event, 15)">15 min</button>
+              <button class="stress-timer-btn" onclick="stressStartTimer(event, 30)">30 min</button>
+              <span class="stress-timer-display" id="stress-timer-display"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#FAECE7;">🧘</div>
+            <div>
+              <div class="stress-card-title">Get used to discomfort</div>
+              <div class="stress-card-sub">Practice regularly · sit with it, do not escape it</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <div class="stress-tags">
+              <span class="stress-tag freq">Ongoing practice</span>
+              <span class="stress-tag stoic">Sit with the impression</span>
+            </div>
+            <p>When stress hits, the average person seeks distraction. Learn to be with the discomfort without trying to escape it.</p>
+            <div class="stress-qbox">When we stop trying to get away from our stress and instead turn toward it with curiosity, it often naturally dissipates.</div>
+            <div class="stress-inline-step"><div class="stress-step-num">1</div><div class="stress-inline-step-text">Feel it. Do not run. Sit with the discomfort.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">2</div><div class="stress-inline-step-text">Your emotional brain learns: I can be stressed and not fall apart.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">3</div><div class="stress-inline-step-text">You can be stressed and still be present. Still make good decisions.</div></div>
+          </div>
+        </div>
+
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#EEEDFE;">🪜</div>
+            <div>
+              <div class="stress-card-title">Stick out like a sore thumb</div>
+              <div class="stress-card-sub">Do it 1×, 10×, 100× — it compounds</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <div class="stress-tags">
+              <span class="stress-tag freq">Do it → repeat → repeat</span>
+              <span class="stress-tag stoic">What stands in the way</span>
+            </div>
+            <p>The average person keeps their head down to avoid the stress of standing out. The people who keep standing out build the capacity to handle it.</p>
+            <div class="stress-qbox">Not because they avoided the stress of standing out. Because they built the capacity to handle it.</div>
+            <div class="stress-compound">
+              <span class="stress-pill">Do it 1×</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill purple">Stretch</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill">Do it 10×</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill green">Strengthen</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill">Do it 100×</span>
+              <span class="stress-compound-arrow">→</span>
+              <span class="stress-pill amber">Soothe</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="stress-phase-sos" class="stress-phase">
+      <div class="section-label">Right now — stress is happening</div>
+      <div class="stress-grid">
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#EEEDFE;">👁️</div>
+            <div>
+              <div class="stress-card-title">Name it</div>
+              <div class="stress-card-sub">Awareness first · examine the impression</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <p>Your emotional brain needs a label before it can downgrade the threat signal. Say it aloud or write it.</p>
+            <div class="stress-qbox" style="font-style:normal;">I am feeling [anxious / frustrated / overwhelmed] because [specific trigger]. Is this impression accurate? Is the actual danger here high, medium, or low?</div>
+          </div>
+        </div>
+
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#E1F5EE;">🌬️</div>
+            <div>
+              <div class="stress-card-title">4-7-8 interrupt</div>
+              <div class="stress-card-sub">Break the reactive loop · 90 seconds</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <p>Biological off-switch. Activate the parasympathetic brake before you say or do something reactive.</p>
+            <div class="stress-inline-step"><div class="stress-step-num">4</div><div class="stress-inline-step-text">Inhale through nose — 4 counts.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">7</div><div class="stress-inline-step-text">Hold — 7 counts.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">8</div><div class="stress-inline-step-text">Exhale through mouth — 8 counts.</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">×</div><div class="stress-inline-step-text">Repeat 3–4 cycles, then act.</div></div>
+            <div class="stress-timer-row">
+              <button class="stress-timer-btn" onclick="stressStartBreath(event)">Start</button>
+              <span class="stress-timer-display" id="stress-breath-display"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#FAEEDA;">📋</div>
+            <div>
+              <div class="stress-card-title">Control triage</div>
+              <div class="stress-card-sub">Dichotomy of control</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <div class="stress-qbox" style="font-style:normal;">Up to me: my response, my next action, my effort, my tone. <br><br>Not up to me: the outcome, what others decide, the timeline, their reaction. <br><br>Commit energy only to column one. Release column two without noise or drama.</div>
+          </div>
+        </div>
+
+        <div class="stress-card" onclick="stressToggleCard(this)">
+          <div class="stress-card-head">
+            <div class="stress-icon" style="background:#FAECE7;">🔭</div>
+            <div>
+              <div class="stress-card-title">Zoom out</div>
+              <div class="stress-card-sub">View from above</div>
+            </div>
+          </div>
+          <div class="stress-card-body">
+            <div class="stress-inline-step"><div class="stress-step-num">1</div><div class="stress-inline-step-text">Will this matter in 1 week?</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">2</div><div class="stress-inline-step-text">Will this matter in 1 year?</div></div>
+            <div class="stress-inline-step"><div class="stress-step-num">3</div><div class="stress-inline-step-text">Will this matter in 5 years?</div></div>
+            <div class="stress-qbox" style="font-style:normal;">Most of what feels catastrophic today will be invisible in five years. Does it still deserve this energy right now?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- WEEKLY -->
   <div id="weekly" class="panel">
     <div class="section-head">
@@ -671,12 +1448,114 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
 <footer>Built from Pigliucci's <em>How to Be a Stoic</em> &amp; primary texts: Epictetus' <em>Enchiridion</em>, Marcus Aurelius' <em>Meditations</em>, Seneca's <em>Letters from a Stoic</em></footer>
 
 <script>
-function show(id, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  window.scrollTo({top: document.querySelector('.nav').offsetTop, behavior:'smooth'});
+var NAV_GROUPS = {
+  rituals: {
+    items: [
+      { id: 'morning', label: '☀️ Morning' },
+      { id: 'evening', label: '🌙 Evening' },
+      { id: 'moment', label: '⚡ In the moment' }
+    ]
+  },
+  tools: {
+    items: [
+      { id: 'stress', label: '🌀 Stress resiliency' },
+      { id: 'control', label: '⚖️ Control check' }
+    ]
+  },
+  reflection: {
+    items: [
+      { id: 'journal', label: '✍️ Journal' },
+      { id: 'weekly', label: '📅 Weekly' },
+      { id: 'quotes', label: '💬 Carry with you' }
+    ]
+  }
+};
+var PANEL_TO_GROUP = {
+  morning: 'rituals',
+  evening: 'rituals',
+  moment: 'rituals',
+  control: 'tools',
+  stress: 'tools',
+  weekly: 'reflection',
+  journal: 'reflection',
+  quotes: 'reflection'
+};
+var lastPanelByGroup = {
+  rituals: 'morning',
+  tools: 'stress',
+  reflection: 'journal'
+};
+
+function scrollToNav() {
+  var shell = document.querySelector('.nav-shell');
+  if (!shell) return;
+  window.scrollTo({ top: shell.offsetTop, behavior: 'smooth' });
+}
+
+function setActiveMainSection(sectionId) {
+  document.querySelectorAll('.nav-main .nav-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.section === sectionId);
+  });
+}
+
+function setActiveSubPanel(panelId) {
+  document.querySelectorAll('.nav-sub .nav-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.panel === panelId);
+  });
+}
+
+function activatePanel(panelId) {
+  document.querySelectorAll('.panel').forEach(function(panel) {
+    panel.classList.toggle('active', panel.id === panelId);
+  });
+}
+
+function renderSubnav(sectionId) {
+  var subnav = document.getElementById('subnav');
+  var group = NAV_GROUPS[sectionId];
+  var html = '';
+  if (!subnav || !group) return;
+
+  group.items.forEach(function(item) {
+    html += '<button class="nav-btn sub-btn" data-panel="' + item.id + '" onclick="showPanel(\'' + item.id + '\', this)">' + item.label + '</button>';
+  });
+  subnav.innerHTML = html;
+}
+
+function showSection(sectionId, btn) {
+  var group = NAV_GROUPS[sectionId];
+  var panelId;
+  if (!group) return;
+
+  panelId = lastPanelByGroup[sectionId] || group.items[0].id;
+  setActiveMainSection(sectionId);
+  renderSubnav(sectionId);
+  showPanel(panelId, null, false);
+  scrollToNav();
+}
+
+function showPanel(panelId, btn, shouldScroll) {
+  var groupId = PANEL_TO_GROUP[panelId];
+  var activeMain = document.querySelector('.nav-main .nav-btn.active');
+
+  if (!groupId) return;
+  lastPanelByGroup[groupId] = panelId;
+
+  if (!activeMain || activeMain.dataset.section !== groupId) {
+    setActiveMainSection(groupId);
+    renderSubnav(groupId);
+  }
+
+  activatePanel(panelId);
+  setActiveSubPanel(panelId);
+
+  if (shouldScroll !== false) scrollToNav();
+}
+
+function initNavigation() {
+  setActiveMainSection('rituals');
+  renderSubnav('rituals');
+  showPanel('morning', null, false);
 }
 
 var ctrlTapped = new Set();
@@ -736,6 +1615,199 @@ function ctrlReset() {
   var v = document.getElementById('ctrl-verdict');
   v.className = 'verdict-box';
   document.getElementById('ctrl-summary').classList.remove('show');
+}
+
+var stressSkillData = [
+  {
+    name: 'Stress Magic',
+    bg: '#EEEDFE',
+    color: '#534AB7',
+    description: 'Reframe stress from enemy to signal. Your nervous system is not broken — it is trying to protect you. The first skill is learning to read the signal instead of fighting it.',
+    stoic: 'Epictetus: It is not things that disturb us, but our judgments about things. Change the judgment and the stress changes shape.',
+    practice: 'When stress hits, ask: what is this signal trying to protect me from? Treat it as data, not danger.'
+  },
+  {
+    name: 'Strengthen',
+    bg: '#E1F5EE',
+    color: '#0F6E56',
+    description: 'Build baseline capacity through deliberate, repeated hard things. Your emotional brain believes evidence, not affirmations.',
+    stoic: 'Marcus Aurelius: The impediment to action advances action. What stands in the way becomes the way.',
+    practice: 'Three times a week minimum: pick one hard thing and do it, especially when you do not feel ready.'
+  },
+  {
+    name: 'Stretch',
+    bg: '#EEEDFE',
+    color: '#534AB7',
+    description: 'Spot your ceiling, name the belief, choose the stretch, feel resistance, act anyway, notice the evidence, and let that capacity compound.',
+    stoic: 'Seneca-style voluntary hardship. Repeated discomfort becomes equanimity: 1× = stretch, 10× = strengthen, 100× = soothe.',
+    practice: 'Once per week: pick one stretch just outside your comfort zone and train that edge on purpose.'
+  },
+  {
+    name: 'Soothe',
+    bg: '#FAEEDA',
+    color: '#854F0B',
+    description: 'Release stress daily before it accumulates and leaks onto the people who matter most. Walk, run, sit in silence — let it move through you.',
+    stoic: 'Seneca: tranquility is trained. Returning to baseline is not a reward. It is part of the discipline.',
+    practice: 'Daily non-negotiable: 15 minutes minimum after work or after a hard moment. Never skip.'
+  },
+  {
+    name: 'Release',
+    bg: '#FAECE7',
+    color: '#993C1D',
+    description: 'Learn to sit with discomfort without escaping it. Turn toward the sensation with curiosity instead of numbing it away.',
+    stoic: 'Epictetus: examine the impression before acting on it. The Stoic pause is exactly this.',
+    practice: 'When discomfort appears, stay with it long enough to prove to your brain that stress does not equal collapse.'
+  }
+];
+var stressLevelExamples = [
+  ['Skip the elevator all day', 'Cold last 30 seconds of a shower', '10 minutes of phone-free silence', 'Eat lunch alone without a screen'],
+  ['Have the conversation you have been postponing', 'Say no to one obligation-driven yes', 'Do your morning routine in silence', 'One 90-minute deep work block with no notifications'],
+  ['Speak up in a meeting when your heart is pounding', 'Ask for feedback from someone whose opinion intimidates you', 'Post something vulnerable publicly', 'Take on a task you are not sure you can do well'],
+  ['Raise something at work that feels risky', 'Ask directly for what you want', 'Commit to a public accountability goal', 'Do something physically hard you have been avoiding'],
+  ['Volunteer for the high-stakes project', 'Have the relationship conversation delayed for months', 'Set a goal that requires becoming someone new', 'Stick out visibly when every instinct says blend in']
+];
+var stressTimerInterval = null;
+var stressBreathTimer = null;
+var stressBreathPhases = [
+  { label: 'Inhale', ms: 4000 },
+  { label: 'Hold', ms: 7000 },
+  { label: 'Exhale', ms: 8000 }
+];
+
+function stressSetMode(mode, btn) {
+  document.querySelectorAll('.stress-mode-btn').forEach(function(el) {
+    el.classList.toggle('active', el === btn);
+  });
+  document.querySelectorAll('.stress-phase').forEach(function(phase) {
+    phase.classList.toggle('active', phase.id === 'stress-phase-' + mode);
+  });
+}
+
+function stressToggleCard(card) {
+  var wasOpen = card.classList.contains('open');
+  var parent = card.parentElement;
+  if (parent) {
+    parent.querySelectorAll('.stress-card.open').forEach(function(el) {
+      el.classList.remove('open');
+    });
+  }
+  if (!wasOpen) card.classList.add('open');
+}
+
+function stressToggleStep(step) {
+  var wasOpen = step.classList.contains('active');
+  document.querySelectorAll('#stress .stress-stretch-step.active').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  if (!wasOpen) step.classList.add('active');
+}
+
+function stressShowSkill(index) {
+  var skill = stressSkillData[index];
+  var detail = document.getElementById('stress-skill-detail');
+  if (!skill || !detail) return;
+
+  document.querySelectorAll('#stress .stress-skill-pill').forEach(function(pill, pillIndex) {
+    pill.classList.toggle('active', pillIndex === index);
+  });
+
+  detail.innerHTML =
+    '<div class="stress-detail-panel" style="background:' + skill.bg + ';">' +
+      '<div style="font-size:14px; font-weight:700; color:' + skill.color + '; margin-bottom:.45rem;">Skill ' + (index + 1) + ': ' + skill.name + '</div>' +
+      '<div style="font-size:13px; line-height:1.65; color:' + skill.color + ';">' + skill.description + '</div>' +
+    '</div>' +
+    '<div class="stress-detail-grid">' +
+      '<div class="stress-mini-card">' +
+        '<h4>Stoic crosswalk</h4>' +
+        '<p>' + skill.stoic + '</p>' +
+      '</div>' +
+      '<div class="stress-mini-card">' +
+        '<h4>Daily practice</h4>' +
+        '<p>' + skill.practice + '</p>' +
+      '</div>' +
+    '</div>';
+}
+
+function stressPickLevel(index) {
+  var examples = document.getElementById('stress-level-examples');
+  var items = stressLevelExamples[index];
+  var html = '<div style="font-weight:600; color:#1a1a18; margin-bottom:5px;">Level ' + (index + 1) + ' examples</div>';
+  if (!examples || !items) return;
+
+  document.querySelectorAll('#stress-level-selector .stress-level').forEach(function(levelBtn, levelIndex) {
+    levelBtn.classList.toggle('active', levelIndex === index);
+  });
+
+  items.forEach(function(item) {
+    html += '<div style="margin-bottom:3px;">· ' + item + '</div>';
+  });
+  examples.innerHTML = html;
+  examples.classList.add('show');
+}
+
+function stressStartTimer(event, minutes) {
+  var display = document.getElementById('stress-timer-display');
+  var seconds = minutes * 60;
+
+  event.stopPropagation();
+  if (!display) return;
+
+  if (stressTimerInterval) {
+    clearInterval(stressTimerInterval);
+    stressTimerInterval = null;
+    display.textContent = '';
+    return;
+  }
+
+  function tick() {
+    var mins;
+    var secs;
+    if (seconds <= 0) {
+      clearInterval(stressTimerInterval);
+      stressTimerInterval = null;
+      display.textContent = 'Done ✓';
+      return;
+    }
+    mins = Math.floor(seconds / 60);
+    secs = seconds % 60;
+    display.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+    seconds -= 1;
+  }
+
+  tick();
+  stressTimerInterval = setInterval(tick, 1000);
+}
+
+function stressStartBreath(event) {
+  event.stopPropagation();
+  if (stressBreathTimer) {
+    clearTimeout(stressBreathTimer);
+    stressBreathTimer = null;
+    document.getElementById('stress-breath-display').textContent = '';
+    return;
+  }
+  stressRunBreath(0, 4);
+}
+
+function stressRunBreath(phaseIndex, repsLeft) {
+  var display = document.getElementById('stress-breath-display');
+  var phase;
+  if (!display) return;
+  if (repsLeft <= 0) {
+    display.textContent = 'Done ✓';
+    stressBreathTimer = null;
+    return;
+  }
+  phase = stressBreathPhases[phaseIndex % stressBreathPhases.length];
+  display.textContent = phase.label;
+  stressBreathTimer = setTimeout(function() {
+    var nextReps = phaseIndex % stressBreathPhases.length === stressBreathPhases.length - 1 ? repsLeft - 1 : repsLeft;
+    stressRunBreath(phaseIndex + 1, nextReps);
+  }, phase.ms);
+}
+
+function initStress() {
+  stressShowSkill(2);
 }
 
 var STOIC_API_BASE = 'https://project-8dip5.vercel.app';
@@ -960,6 +2032,8 @@ function initJournal() {
   }
 }
 
+initNavigation();
+initStress();
 initJournal();
 </script>
 </body>
