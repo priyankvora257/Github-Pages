@@ -703,6 +703,12 @@ body {
   color: #888780;
   font-variant-numeric: tabular-nums;
 }
+.stress-timer-meta {
+  min-width: 86px;
+  font-size: 11.5px;
+  color: #9a978d;
+  font-variant-numeric: tabular-nums;
+}
 @media(max-width:640px) {
   .stress-detail-grid,
   .stress-grid { grid-template-columns: 1fr; }
@@ -1331,6 +1337,7 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
             <div class="stress-timer-row">
               <button class="stress-timer-btn" onclick="stressStartBreath(event)">Start</button>
               <span class="stress-timer-display" id="stress-breath-display"></span>
+              <span class="stress-timer-meta" id="stress-breath-rounds"></span>
             </div>
           </div>
         </div>
@@ -1831,6 +1838,8 @@ var stressLevelExamples = [
 ];
 var stressTimerInterval = null;
 var stressBreathTimer = null;
+var stressBreathTickTimer = null;
+var stressBreathTotalRounds = 4;
 var stressBreathPhases = [
   { label: 'Inhale', ms: 4000 },
   { label: 'Hold', ms: 7000 },
@@ -1942,29 +1951,55 @@ function stressStartTimer(event, minutes) {
 }
 
 function stressStartBreath(event) {
+  var roundDisplay = document.getElementById('stress-breath-rounds');
   event.stopPropagation();
   if (stressBreathTimer) {
     clearTimeout(stressBreathTimer);
     stressBreathTimer = null;
+    clearInterval(stressBreathTickTimer);
+    stressBreathTickTimer = null;
     document.getElementById('stress-breath-display').textContent = '';
+    if (roundDisplay) roundDisplay.textContent = '';
     return;
   }
-  stressRunBreath(0, 4);
+  stressRunBreath(0, stressBreathTotalRounds);
 }
 
 function stressRunBreath(phaseIndex, repsLeft) {
   var display = document.getElementById('stress-breath-display');
+  var roundDisplay = document.getElementById('stress-breath-rounds');
   var phase;
+  var stageSeconds;
+  var elapsed = 0;
+  var currentRound;
   if (!display) return;
   if (repsLeft <= 0) {
     display.textContent = 'Done ✓';
+    if (roundDisplay) roundDisplay.textContent = 'Round ' + stressBreathTotalRounds + '/' + stressBreathTotalRounds;
     stressBreathTimer = null;
+    clearInterval(stressBreathTickTimer);
+    stressBreathTickTimer = null;
     return;
   }
+  clearInterval(stressBreathTickTimer);
   phase = stressBreathPhases[phaseIndex % stressBreathPhases.length];
-  display.textContent = phase.label;
+  stageSeconds = Math.round(phase.ms / 1000);
+  currentRound = stressBreathTotalRounds - repsLeft + 1;
+  function renderStage() {
+    display.textContent = phase.label + ' ' + elapsed + '/' + stageSeconds + 's';
+    if (roundDisplay) roundDisplay.textContent = 'Round ' + currentRound + '/' + stressBreathTotalRounds;
+  }
+  renderStage();
+  stressBreathTickTimer = setInterval(function() {
+    if (elapsed < stageSeconds) {
+      elapsed += 1;
+      renderStage();
+    }
+  }, 1000);
   stressBreathTimer = setTimeout(function() {
     var nextReps = phaseIndex % stressBreathPhases.length === stressBreathPhases.length - 1 ? repsLeft - 1 : repsLeft;
+    clearInterval(stressBreathTickTimer);
+    stressBreathTickTimer = null;
     stressRunBreath(phaseIndex + 1, nextReps);
   }, phase.ms);
 }
