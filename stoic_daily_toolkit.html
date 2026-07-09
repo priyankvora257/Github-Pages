@@ -332,6 +332,15 @@ body {
 }
 .journal-auth-top strong { font-size:13px; }
 .journal-date { font-size:12px; color:#888780; }
+.journal-date-controls {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.journal-date-picker {
+  border:1.5px solid #e8e6e0; border-radius:10px;
+  padding:.35rem .55rem; font-size:12px; color:#1a1a18;
+  background:#fafaf8;
+}
+.journal-date-picker:focus { outline:none; border-color:#7F77DD; background:white; }
 .journal-auth-row { display:flex; gap:8px; flex-wrap:wrap; }
 .journal-auth-row input {
   flex:1; min-width:190px;
@@ -1438,7 +1447,10 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
     <div class="journal-auth">
       <div class="journal-auth-top">
         <strong>Journal storage</strong>
-        <span id="journal-date" class="journal-date"></span>
+        <div class="journal-date-controls">
+          <span id="journal-date" class="journal-date"></span>
+          <input id="journal-date-picker" class="journal-date-picker" type="date" aria-label="Select journal entry date" disabled>
+        </div>
       </div>
       <div class="journal-auth-row">
         <input id="journal-passphrase" type="password" placeholder="Enter your journal passphrase">
@@ -2011,6 +2023,7 @@ function initStress() {
 var STOIC_API_BASE = 'https://project-8dip5.vercel.app';
 var STOIC_TOKEN_KEY = 'stoic_session_token';
 var STOIC_IDLE_SAVE_MS = 15000;
+var STOIC_EDITABLE_DAYS_BACK = 2;
 var STOIC_QUESTION_IDS = [
   'morning_intention',
   'premeditatio_malorum',
@@ -2026,15 +2039,71 @@ var journalState = {
   hydrated: false,
   syncing: false,
   dirty: false,
-  lastSavedSnapshot: ''
+  lastSavedSnapshot: '',
+  selectedDate: ''
 };
 
-function getLocalDateKey() {
-  var now = new Date();
-  var y = now.getFullYear();
-  var m = String(now.getMonth() + 1).padStart(2, '0');
-  var d = String(now.getDate()).padStart(2, '0');
+function dateToKey(date) {
+  var y = date.getFullYear();
+  var m = String(date.getMonth() + 1).padStart(2, '0');
+  var d = String(date.getDate()).padStart(2, '0');
   return y + '-' + m + '-' + d;
+}
+
+function getLocalDateKey() {
+  return dateToKey(new Date());
+}
+
+function parseDateKey(dateKey) {
+  var parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateKey || '');
+  var year;
+  var month;
+  var day;
+  var maxDay;
+  if (!parts) return null;
+  year = Number(parts[1]);
+  month = Number(parts[2]);
+  day = Number(parts[3]);
+  if (month < 1 || month > 12) return null;
+  maxDay = new Date(year, month, 0).getDate();
+  if (day < 1 || day > maxDay) return null;
+  return { year: year, month: month, day: day };
+}
+
+function getJournalDateBounds() {
+  var maxDate = new Date();
+  var minDate;
+  maxDate.setHours(0, 0, 0, 0);
+  minDate = new Date(maxDate);
+  minDate.setDate(minDate.getDate() - STOIC_EDITABLE_DAYS_BACK);
+  return {
+    min: dateToKey(minDate),
+    max: dateToKey(maxDate)
+  };
+}
+
+function isEditableJournalDate(dateKey) {
+  var parsed = parseDateKey(dateKey);
+  var bounds = getJournalDateBounds();
+  if (!parsed) return false;
+  return dateKey >= bounds.min && dateKey <= bounds.max;
+}
+
+function setJournalSelectedDate(nextDate) {
+  var dateEl = document.getElementById('journal-date');
+  var picker = document.getElementById('journal-date-picker');
+  var bounds = getJournalDateBounds();
+  var safeDate = isEditableJournalDate(nextDate) ? nextDate : bounds.max;
+  if (nextDate && nextDate !== safeDate) {
+    console.warn('Journal date ' + nextDate + ' is out of editable range, defaulting to ' + safeDate + '.');
+  }
+  journalState.selectedDate = safeDate;
+  if (dateEl) dateEl.textContent = 'Entry date: ' + safeDate;
+  if (picker) {
+    picker.min = bounds.min;
+    picker.max = bounds.max;
+    picker.value = safeDate;
+  }
 }
 
 function apiConfigured() {
@@ -2051,12 +2120,14 @@ function setJournalStatus(text, kind) {
 }
 
 function setJournalInputsDisabled(disabled) {
+  var picker = document.getElementById('journal-date-picker');
   document.querySelectorAll('#journal textarea[data-field]').forEach(function(area) {
     area.disabled = disabled;
   });
   document.querySelectorAll('#journal .journal-tool-btn').forEach(function(btn) {
     btn.disabled = disabled;
   });
+  if (picker) picker.disabled = disabled;
 }
 
 function setAuthButtons() {
@@ -2190,7 +2261,7 @@ async function journalRequest(path, options) {
   return data;
 }
 
-async function loadTodayEntry() {
+async function loadJournalEntry() {
   if (!apiConfigured()) {
     setJournalStatus('Set STOIC_API_BASE in this file first (your Vercel URL).', 'err');
     return;
@@ -2200,9 +2271,13 @@ async function loadTodayEntry() {
     return;
   }
 
-  var date = getLocalDateKey();
+  var date = journalState.selectedDate || getLocalDateKey();
+  if (!isEditableJournalDate(date)) {
+    setJournalSelectedDate(getLocalDateKey());
+    date = journalState.selectedDate;
+  }
   journalState.hydrated = false;
-  setJournalStatus('Loading today\'s entry...', '');
+  setJournalStatus('Loading entry for ' + date + '...', '');
 
   try {
     var data = await journalRequest('/api/journal?date=' + date, { method: 'GET' });
@@ -2218,7 +2293,7 @@ async function loadTodayEntry() {
       setJournalStatus('Session expired. Enter passphrase again.', 'err');
       return;
     }
-    setJournalStatus('Could not load today\'s entry: ' + error.message, 'err');
+    setJournalStatus('Could not load entry for ' + date + ': ' + error.message, 'err');
   }
 }
 
@@ -2230,11 +2305,11 @@ function scheduleSave() {
   }
   clearScheduledSave();
   journalState.saveTimer = setTimeout(function() {
-    saveTodayEntry({ quiet: false });
+    saveJournalEntry({ quiet: false });
   }, STOIC_IDLE_SAVE_MS);
 }
 
-async function saveTodayEntry(options) {
+async function saveJournalEntry(options) {
   var date;
   var entry;
   options = options || {};
@@ -2245,7 +2320,7 @@ async function saveTodayEntry(options) {
   clearScheduledSave();
   journalState.syncing = true;
   if (!options.quiet) setJournalStatus('Saving...', '');
-  date = getLocalDateKey();
+  date = journalState.selectedDate || getLocalDateKey();
   entry = readEntryFromUI();
 
   try {
@@ -2268,7 +2343,7 @@ async function saveTodayEntry(options) {
 function flushJournalSave(options) {
   if (!journalState.token || !journalState.hydrated) return;
   if (!refreshJournalDirtyState()) return;
-  saveTodayEntry(options || {});
+  saveJournalEntry(options || {});
 }
 
 async function unlockJournal() {
@@ -2294,7 +2369,7 @@ async function unlockJournal() {
     localStorage.setItem(STOIC_TOKEN_KEY, journalState.token);
     if (input) input.value = '';
     setAuthButtons();
-    await loadTodayEntry();
+    await loadJournalEntry();
   } catch (error) {
     setJournalStatus('Unlock failed: ' + error.message, 'err');
   }
@@ -2303,7 +2378,7 @@ async function unlockJournal() {
 async function lockJournal() {
   var saveOk = true;
   if (journalState.token && journalState.hydrated) {
-    saveOk = await saveTodayEntry({ quiet: false });
+    saveOk = await saveJournalEntry({ quiet: false });
   }
   if (saveOk === false) return;
   if (apiConfigured()) {
@@ -2323,8 +2398,8 @@ async function lockJournal() {
 }
 
 function initJournal() {
-  var dateEl = document.getElementById('journal-date');
-  if (dateEl) dateEl.textContent = 'Today: ' + getLocalDateKey();
+  var picker = document.getElementById('journal-date-picker');
+  setJournalSelectedDate(getLocalDateKey());
 
   var unlock = document.getElementById('journal-unlock');
   if (unlock) unlock.addEventListener('click', unlockJournal);
@@ -2338,6 +2413,39 @@ function initJournal() {
       if (e.key === 'Enter') {
         e.preventDefault();
         unlockJournal();
+      }
+    });
+  }
+
+  if (picker) {
+    picker.addEventListener('change', async function() {
+      var nextDate = picker.value;
+      var previousDate = journalState.selectedDate;
+      var saveOk = true;
+      if (!isEditableJournalDate(nextDate)) {
+        var daysText = STOIC_EDITABLE_DAYS_BACK === 1
+          ? 'the previous day'
+          : 'the previous ' + STOIC_EDITABLE_DAYS_BACK + ' days';
+        setJournalStatus('You can only edit today\'s entry and entries from ' + daysText + '.', 'err');
+        setJournalSelectedDate(previousDate || getLocalDateKey());
+        return;
+      }
+      if (nextDate === journalState.selectedDate) return;
+      if (journalState.token && journalState.hydrated && !journalState.syncing) {
+        saveOk = await saveJournalEntry({ quiet: false });
+      }
+      if (saveOk === false) {
+        setJournalStatus('Could not switch dates because saving failed. Please try again.', 'err');
+        setJournalSelectedDate(previousDate || getLocalDateKey());
+        return;
+      }
+      setJournalSelectedDate(nextDate);
+      if (journalState.token) {
+        loadJournalEntry();
+      } else {
+        writeEntryToUI({});
+        journalState.hydrated = false;
+        setJournalStatus('Locked. Enter passphrase to load and save entries.', '');
       }
     });
   }
@@ -2371,7 +2479,7 @@ function initJournal() {
 
   setAuthButtons();
   if (journalState.token) {
-    loadTodayEntry();
+    loadJournalEntry();
   } else if (!apiConfigured()) {
     setJournalStatus('Set STOIC_API_BASE in this file first (your Vercel URL).', 'err');
   }
