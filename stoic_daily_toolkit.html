@@ -1089,35 +1089,35 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
       </div>
       <div class="card-body">The point is not intensity. The point is keeping all five dimensions of happiness alive every day, even when life is busy.</div>
       <div class="spire-checklist">
-        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false">
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Spiritual domain as complete">
           <div class="spire-check-top">
             <div class="spire-check-title">🌌 Spiritual</div>
             <div class="spire-check-dot">✓</div>
           </div>
           <div class="spire-check-copy">Meaning, mindfulness, and intention</div>
         </button>
-        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false">
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Physical domain as complete">
           <div class="spire-check-top">
             <div class="spire-check-title">🔋 Physical</div>
             <div class="spire-check-dot">✓</div>
           </div>
           <div class="spire-check-copy">Breath, movement, hydration, posture</div>
         </button>
-        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false">
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Intellectual domain as complete">
           <div class="spire-check-top">
             <div class="spire-check-title">🧠 Intellectual</div>
             <div class="spire-check-dot">✓</div>
           </div>
           <div class="spire-check-copy">Curiosity, learning, and fresh perspective</div>
         </button>
-        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false">
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Relational domain as complete">
           <div class="spire-check-top">
             <div class="spire-check-title">🤝 Relational</div>
             <div class="spire-check-dot">✓</div>
           </div>
           <div class="spire-check-copy">Connection, appreciation, and presence</div>
         </button>
-        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false">
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Emotional domain as complete">
           <div class="spire-check-top">
             <div class="spire-check-title">❤️ Emotional</div>
             <div class="spire-check-dot">✓</div>
@@ -1156,8 +1156,8 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
       <div class="spire-detail-body">
         Pick one micro-practice before work, during lunch, or when you need to reconnect with purpose.
         <ul>
-          <li><strong>The Virtue Anchor:</strong> Before opening your IDE, inbox, or next task, write one virtue you will bring to it, like craftsmanship or patience.</li>
-          <li><strong>The 60-Second Sky Scan:</strong> Step away from screens and observe clouds, trees, or birds for one minute without analyzing anything.</li>
+          <li><strong>The Virtue Anchor:</strong> Before opening your laptop, inbox, or next task, write one virtue you will bring to it, like craftsmanship or patience.</li>
+          <li><strong>The 60-Second Sky Scan:</strong> Step away from screens and notice the sky, trees, sounds, or air around you for one minute without analyzing anything.</li>
           <li><strong>The Sensory First Bite:</strong> Eat the first three bites of your meal in silence and pay full attention to temperature, texture, and flavor.</li>
           <li><strong>The Dedicated Hour:</strong> Choose one hour of work and mentally offer that hour's quality to the people who benefit from it.</li>
         </ul>
@@ -2100,7 +2100,6 @@ function initNavigation() {
 }
 
 function spireToggleCheck(btn) {
-  if (!btn) return;
   btn.classList.toggle('done');
   btn.setAttribute('aria-pressed', btn.classList.contains('done') ? 'true' : 'false');
   spireUpdateProgress();
@@ -2108,9 +2107,12 @@ function spireToggleCheck(btn) {
 
 function spireUpdateProgress() {
   var checklistItems = document.querySelectorAll('.spire-check-btn');
-  var completedCount = document.querySelectorAll('.spire-check-btn.done').length;
+  var completedCount = 0;
   var countEl = document.getElementById('spire-progress-count');
   var textEl = document.getElementById('spire-progress-text');
+  checklistItems.forEach(function(item) {
+    if (item.classList.contains('done')) completedCount++;
+  });
   if (countEl) countEl.textContent = completedCount + '/' + checklistItems.length;
   if (!textEl) return;
   if (completedCount === 0) textEl.textContent = 'Pick one action in each domain and let small wins compound.';
