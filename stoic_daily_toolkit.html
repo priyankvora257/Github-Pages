@@ -160,6 +160,173 @@ body {
   line-height: 1.6;
   font-style: italic;
 }
+.badge-spire { background:#F4EAFE; color:#5A2CA0; }
+.spire-progress {
+  background: #26215C;
+  color: white;
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.spire-progress strong {
+  font-size: 18px;
+  font-weight: 700;
+}
+.spire-progress span {
+  color: rgba(255,255,255,0.76);
+  font-size: 12px;
+}
+.spire-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: .95rem;
+}
+.spire-check-btn {
+  width: 100%;
+  border: 1.5px solid #e8e6e0;
+  border-radius: 14px;
+  background: #fafaf8;
+  color: #1a1a18;
+  padding: .9rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all .16s;
+}
+.spire-check-btn:hover {
+  border-color: #c9c4f7;
+  background: #f7f5fe;
+}
+.spire-check-btn.done {
+  background: #f1ecff;
+  border-color: #7F77DD;
+  box-shadow: inset 0 0 0 1px rgba(127,119,221,0.1);
+}
+.spire-check-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: .3rem;
+}
+.spire-check-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.spire-check-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid #d3d1c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  background: white;
+  flex-shrink: 0;
+}
+.spire-check-btn.done .spire-check-dot {
+  background: #534AB7;
+  border-color: #534AB7;
+  color: white;
+}
+.spire-check-copy {
+  font-size: 12px;
+  line-height: 1.55;
+  color: #6c6a63;
+}
+.spire-min-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: .95rem;
+}
+.spire-min-item {
+  border: 1px solid #eceae4;
+  border-radius: 12px;
+  background: #fafaf8;
+  padding: .8rem .9rem;
+}
+.spire-min-item strong,
+.spire-detail-head strong {
+  display: block;
+  font-size: 12px;
+  color: #1a1a18;
+  margin-bottom: .2rem;
+}
+.spire-min-item span,
+.spire-detail-head span {
+  font-size: 12px;
+  color: #6c6a63;
+  line-height: 1.55;
+}
+.spire-detail {
+  background: white;
+  border: 1.5px solid #e8e6e0;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.spire-detail summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1rem 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.spire-detail summary::-webkit-details-marker { display: none; }
+.spire-detail[open] summary {
+  background: #fafaf8;
+  border-bottom: 1px solid #eceae4;
+}
+.spire-detail-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.spire-detail-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+.spire-detail-caret {
+  color: #9a978d;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.spire-detail-body {
+  padding: 1rem 1.15rem 1.1rem;
+  font-size: 13px;
+  color: #5f5e5a;
+  line-height: 1.7;
+}
+.spire-detail-body ul {
+  margin: .75rem 0 0 1rem;
+}
+.spire-detail-body li {
+  margin-bottom: .55rem;
+}
+.spire-detail-body li strong {
+  color: #1a1a18;
+}
+@media(max-width:640px) {
+  .spire-checklist,
+  .spire-min-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* CONTROL CHECK */
 .control-item {
@@ -894,6 +1061,196 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
         <p>React immediately. Let the emotion decide. Regret it later. Repeat tomorrow.</p>
       </div>
     </div>
+  </div>
+
+  <!-- SPIRE -->
+  <div id="spire" class="panel">
+    <div class="section-head">
+      <div class="section-icon" style="background:#F4EAFE; font-size:22px;">✨</div>
+      <div>
+        <h2>SPIRE happiness</h2>
+        <p>Five tiny daily habits with high compound value</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      Tal Ben-Shahar's SPIRE framework fits here as a practical daily ritual: do one tiny action for your Spiritual, Physical, Intellectual, Relational, and Emotional wellbeing. Keep every action under 2 minutes, low friction, and easy to repeat.
+    </div>
+
+    <div class="spire-progress">
+      <div><strong id="spire-progress-count">0/5</strong><br><span>Tiny habits completed today</span></div>
+      <span id="spire-progress-text">Pick one action in each domain and let small wins compound.</span>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <span class="card-badge badge-spire">Daily checklist</span>
+        <div class="card-title">Tap once per domain when you complete a micro-action</div>
+      </div>
+      <div class="card-body">The point is not intensity. The point is keeping all five dimensions of happiness alive every day, even when life is busy.</div>
+      <div class="spire-checklist">
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Spiritual domain as complete">
+          <div class="spire-check-top">
+            <div class="spire-check-title">🌌 Spiritual</div>
+            <div class="spire-check-dot">✓</div>
+          </div>
+          <div class="spire-check-copy">Meaning, mindfulness, and intention</div>
+        </button>
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Physical domain as complete">
+          <div class="spire-check-top">
+            <div class="spire-check-title">🔋 Physical</div>
+            <div class="spire-check-dot">✓</div>
+          </div>
+          <div class="spire-check-copy">Breath, movement, hydration, posture</div>
+        </button>
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Intellectual domain as complete">
+          <div class="spire-check-top">
+            <div class="spire-check-title">🧠 Intellectual</div>
+            <div class="spire-check-dot">✓</div>
+          </div>
+          <div class="spire-check-copy">Curiosity, learning, and fresh perspective</div>
+        </button>
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Relational domain as complete">
+          <div class="spire-check-top">
+            <div class="spire-check-title">🤝 Relational</div>
+            <div class="spire-check-dot">✓</div>
+          </div>
+          <div class="spire-check-copy">Connection, appreciation, and presence</div>
+        </button>
+        <button class="spire-check-btn" type="button" onclick="spireToggleCheck(this)" aria-pressed="false" aria-label="Mark Emotional domain as complete">
+          <div class="spire-check-top">
+            <div class="spire-check-title">❤️ Emotional</div>
+            <div class="spire-check-dot">✓</div>
+          </div>
+          <div class="spire-check-copy">Resilience, permission, savoring, joy</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="card acc-blue">
+      <div class="card-top">
+        <span class="card-badge badge-spire">Minimum viable day</span>
+        <div class="card-title">If the day is chaotic, do the smallest version anyway</div>
+      </div>
+      <div class="card-body">A complete SPIRE day can be less than two minutes total if needed. Tiny consistency beats occasional perfection.</div>
+      <div class="spire-min-grid">
+        <div class="spire-min-item"><strong>Spiritual</strong><span>Name one virtue for the next hour.</span></div>
+        <div class="spire-min-item"><strong>Physical</strong><span>Take one physiological sigh.</span></div>
+        <div class="spire-min-item"><strong>Intellectual</strong><span>Read one page or learn one new word.</span></div>
+        <div class="spire-min-item"><strong>Relational</strong><span>Send one sincere appreciation text.</span></div>
+        <div class="spire-min-item"><strong>Emotional</strong><span>Write one bright spot from today.</span></div>
+      </div>
+    </div>
+
+    <details class="spire-detail">
+      <summary>
+        <div class="spire-detail-head">
+          <div class="spire-detail-icon" style="background:#F4EAFE;">🌌</div>
+          <div>
+            <strong>Spiritual</strong>
+            <span>Meaning, mindfulness, and bringing intention into ordinary moments</span>
+          </div>
+        </div>
+        <div class="spire-detail-caret">Expand</div>
+      </summary>
+      <div class="spire-detail-body">
+        Pick one micro-practice before work, during lunch, or when you need to reconnect with purpose.
+        <ul>
+          <li><strong>The Virtue Anchor:</strong> Before opening your laptop, inbox, or next task, write one virtue you will bring to it, like craftsmanship or patience.</li>
+          <li><strong>The 60-Second Sky Scan:</strong> Step away from screens and notice the sky, trees, sounds, or air around you for one minute without analyzing anything.</li>
+          <li><strong>The Sensory First Bite:</strong> Eat the first three bites of your meal in silence and pay full attention to temperature, texture, and flavor.</li>
+          <li><strong>The Dedicated Hour:</strong> Choose one hour of work and mentally offer that hour's quality to the people who benefit from it.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spire-detail">
+      <summary>
+        <div class="spire-detail-head">
+          <div class="spire-detail-icon" style="background:#EAF3DE;">🔋</div>
+          <div>
+            <strong>Physical</strong>
+            <span>Use tiny body resets to improve focus, energy, and nervous system regulation</span>
+          </div>
+        </div>
+        <div class="spire-detail-caret">Expand</div>
+      </summary>
+      <div class="spire-detail-body">
+        Use environment triggers so your body care happens automatically inside the workday.
+        <ul>
+          <li><strong>The Meeting Transition Stretch:</strong> After a meeting, do 10 air squats, 5 push-ups, or a 30-second doorway chest stretch.</li>
+          <li><strong>The Physiological Sigh:</strong> Take two quick inhales through the nose, then one long slow exhale through the mouth. Repeat 3 times.</li>
+          <li><strong>The Hydration Shadow:</strong> Every time you brew coffee or tea, drink a full glass of water while it brews.</li>
+          <li><strong>The Posture Reset Trigger:</strong> Each time you open a new browser tab or close a document, drop your shoulders, unclench your jaw, and roll your wrists.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spire-detail">
+      <summary>
+        <div class="spire-detail-head">
+          <div class="spire-detail-icon" style="background:#E6F1FB;">🧠</div>
+          <div>
+            <strong>Intellectual</strong>
+            <span>Keep curiosity alive with tiny doses of learning and surprise</span>
+          </div>
+        </div>
+        <div class="spire-detail-caret">Expand</div>
+      </summary>
+      <div class="spire-detail-body">
+        These are short curiosity reps meant to interrupt autopilot and widen perspective.
+        <ul>
+          <li><strong>The 1-Page Rule:</strong> Keep a non-fiction book nearby and read one random page during a cognitive lull.</li>
+          <li><strong>The Etymology Rabbit Hole:</strong> Look up the origin of one word you heard or typed today, like cliché or sandbox.</li>
+          <li><strong>The “How Stuff Works” Break:</strong> Replace one scroll break with 2 minutes learning how something physical works, like a coffee maker, bicycle gears, or fiber optic cable.</li>
+          <li><strong>The Cross-Functional Question:</strong> Ask someone from another team what interesting or weird challenge they're working on right now.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spire-detail">
+      <summary>
+        <div class="spire-detail-head">
+          <div class="spire-detail-icon" style="background:#FAEEDA;">🤝</div>
+          <div>
+            <strong>Relational</strong>
+            <span>Build trust, warmth, and human connection in small deliberate ways</span>
+          </div>
+        </div>
+        <div class="spire-detail-caret">Expand</div>
+      </summary>
+      <div class="spire-detail-body">
+        Connection compounds when it is specific, sincere, and repeated without needing a special occasion.
+        <ul>
+          <li><strong>The Micro-Shoutout:</strong> Send a one-sentence message acknowledging a specific thing someone did well.</li>
+          <li><strong>The Nostalgia Deposit:</strong> Text a friend a random memory or inside joke with zero agenda.</li>
+          <li><strong>The Humanized Transaction:</strong> Make eye contact, smile, and genuinely ask a service worker how their shift is going.</li>
+          <li><strong>The Uninterrupted Minute:</strong> When someone close to you speaks, turn your phone screen-down and give them 60 seconds of total attention.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="spire-detail">
+      <summary>
+        <div class="spire-detail-head">
+          <div class="spire-detail-icon" style="background:#FAECE7;">❤️</div>
+          <div>
+            <strong>Emotional</strong>
+            <span>Practice self-regulation, permission, savoring, and lightness</span>
+          </div>
+        </div>
+        <div class="spire-detail-caret">Expand</div>
+      </summary>
+      <div class="spire-detail-body">
+        The goal is not forced positivity. It is helping your nervous system notice what is real, workable, and good.
+        <ul>
+          <li><strong>The 3-Item Bright Spots List:</strong> During a slump, note three tiny things that went well in the last few hours.</li>
+          <li><strong>The Permission Statement:</strong> Name the emotion you feel and remind yourself it's a normal human stress response.</li>
+          <li><strong>The 15-Second Savor:</strong> When something good happens, stay with the positive feeling for 15 unbroken seconds.</li>
+          <li><strong>The Laugh Reset:</strong> Keep 2 or 3 short videos that reliably make you laugh and use one when your inner tone gets too heavy.</li>
+        </ul>
+      </div>
+    </details>
   </div>
 
   <!-- CONTROL CHECK -->
@@ -1635,7 +1992,8 @@ var NAV_GROUPS = {
     items: [
       { id: 'morning', label: '☀️ Morning' },
       { id: 'evening', label: '🌙 Evening' },
-      { id: 'moment', label: '⚡ In the moment' }
+      { id: 'moment', label: '⚡ In the moment' },
+      { id: 'spire', label: '✨ SPIRE happiness' }
     ]
   },
   tools: {
@@ -1656,6 +2014,7 @@ var PANEL_TO_GROUP = {
   morning: 'rituals',
   evening: 'rituals',
   moment: 'rituals',
+  spire: 'rituals',
   control: 'tools',
   stress: 'tools',
   weekly: 'reflection',
@@ -1738,6 +2097,27 @@ function initNavigation() {
   setActiveMainSection('rituals');
   renderSubnav('rituals');
   showPanel('morning', null, false);
+}
+
+function spireToggleCheck(btn) {
+  btn.classList.toggle('done');
+  btn.setAttribute('aria-pressed', btn.classList.contains('done') ? 'true' : 'false');
+  spireUpdateProgress();
+}
+
+function spireUpdateProgress() {
+  var checklistItems = document.querySelectorAll('.spire-check-btn');
+  var completedCount = 0;
+  var countEl = document.getElementById('spire-progress-count');
+  var textEl = document.getElementById('spire-progress-text');
+  checklistItems.forEach(function(item) {
+    if (item.classList.contains('done')) completedCount++;
+  });
+  if (countEl) countEl.textContent = completedCount + '/' + checklistItems.length;
+  if (!textEl) return;
+  if (completedCount === 0) textEl.textContent = 'Pick one action in each domain and let small wins compound.';
+  else if (completedCount < checklistItems.length) textEl.textContent = 'Nice — keep the streak going and touch the remaining domains.';
+  else textEl.textContent = 'Complete SPIRE day — five tiny actions, five votes for a happier baseline.';
 }
 
 var ctrlTapped = new Set();
@@ -2486,6 +2866,7 @@ function initJournal() {
 }
 
 initNavigation();
+spireUpdateProgress();
 initStress();
 initJournal();
 </script>
