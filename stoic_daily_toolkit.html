@@ -328,6 +328,85 @@ body {
   }
 }
 
+/* MVD COLLAPSIBLE ITEMS */
+.mvd-list {
+  margin-top: .95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mvd-item {
+  background: #fafaf8;
+  border: 1px solid #dde8f5;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.mvd-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: .75rem .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  user-select: none;
+}
+.mvd-item summary::-webkit-details-marker { display: none; }
+.mvd-item[open] summary {
+  background: #f0f5fc;
+  border-bottom: 1px solid #dde8f5;
+}
+.mvd-summary-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mvd-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 17px;
+}
+.mvd-summary-head strong {
+  display: block;
+  font-size: 12px;
+  color: #1a1a18;
+  margin-bottom: .15rem;
+}
+.mvd-summary-head span {
+  font-size: 12px;
+  color: #6c6a63;
+}
+.mvd-caret {
+  color: #9a978d;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+.mvd-item[open] .mvd-caret {
+  transform: rotate(90deg);
+}
+.mvd-body {
+  padding: .8rem .9rem .9rem;
+  font-size: 13px;
+  color: #5f5e5a;
+  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+.mvd-body p { margin: 0; }
+.mvd-body strong { color: #1a1a18; }
+.mvd-label {
+  font-style: normal;
+  font-weight: 600;
+  color: #378ADD;
+}
+
 /* CONTROL CHECK */
 .control-item {
   background: white;
@@ -1133,12 +1212,93 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
         <div class="card-title">If the day is chaotic, do the smallest version anyway</div>
       </div>
       <div class="card-body">A complete SPIRE day can be less than two minutes total if needed. Tiny consistency beats occasional perfection.</div>
-      <div class="spire-min-grid">
-        <div class="spire-min-item"><strong>Spiritual</strong><span>Name one virtue for the next hour.</span></div>
-        <div class="spire-min-item"><strong>Physical</strong><span>Take one physiological sigh.</span></div>
-        <div class="spire-min-item"><strong>Intellectual</strong><span>Read one page or learn one new word.</span></div>
-        <div class="spire-min-item"><strong>Relational</strong><span>Send one sincere appreciation text.</span></div>
-        <div class="spire-min-item"><strong>Emotional</strong><span>Write one bright spot from today.</span></div>
+      <div class="mvd-list">
+
+        <details class="mvd-item">
+          <summary>
+            <div class="mvd-summary-head">
+              <div class="mvd-icon" style="background:#F4EAFE;">🌌</div>
+              <div>
+                <strong>Spiritual</strong>
+                <span>Name one virtue for the next hour.</span>
+              </div>
+            </div>
+            <div class="mvd-caret">▸</div>
+          </summary>
+          <div class="mvd-body">
+            <p><em class="mvd-label">What it actually means:</em> You choose <em>one</em> actionable word — like <em>Patience, Craftsmanship, Courage,</em> or <em>Clarity</em> — and commit to filtering your actions through it for just the next 60 minutes.</p>
+            <p><em class="mvd-label">Why it works:</em> In psychology, this is called <strong>priming</strong>. If you tell your brain, "For the next hour, I am practicing patience," your reticular activating system (the brain's filtering radar) actively looks for opportunities to be patient. It turns a standard hour of chaotic reactiveness into an hour of deliberate practice.</p>
+          </div>
+        </details>
+
+        <details class="mvd-item">
+          <summary>
+            <div class="mvd-summary-head">
+              <div class="mvd-icon" style="background:#EAF3DE;">🔋</div>
+              <div>
+                <strong>Physical</strong>
+                <span>Take one physiological sigh.</span>
+              </div>
+            </div>
+            <div class="mvd-caret">▸</div>
+          </summary>
+          <div class="mvd-body">
+            <p><em class="mvd-label">What it actually means:</em> You do a specific breathing pattern developed by neuroscientists: <strong>two quick inhales through the nose</strong> (one deep inhale, followed immediately by a sharp "top-off" inhale), followed by a <strong>long, slow exhale through the mouth</strong>.</p>
+            <p><em class="mvd-label">Why it works:</em> This is the fastest real-time, autonomous way to reduce autonomic arousal (stress). The double-inhale pops open the tiny air sacs in your lungs (alveoli) that collapse when you are stressed. The long exhale dumps carbon dioxide rapidly, which immediately sends a signal to your brainstem to lower your heart rate and activate the parasympathetic (calming) nervous system. It takes 4 seconds.</p>
+          </div>
+        </details>
+
+        <details class="mvd-item">
+          <summary>
+            <div class="mvd-summary-head">
+              <div class="mvd-icon" style="background:#E6F1FB;">🧠</div>
+              <div>
+                <strong>Intellectual</strong>
+                <span>Read one page or learn one new word.</span>
+              </div>
+            </div>
+            <div class="mvd-caret">▸</div>
+          </summary>
+          <div class="mvd-body">
+            <p><em class="mvd-label">What it actually means:</em> You open a physical book or a Wikipedia article, read exactly one page or look up one word (like the origin of a word you used), and then close it.</p>
+            <p><em class="mvd-label">Why it works:</em> This lowers the <strong>activation energy</strong> of curiosity. When we are exhausted, our brain rejects the idea of "studying for an hour." But reading <em>one page</em> is so easy that your brain doesn't fight it. The secret magic? Once you overcome the friction to read one page, you will frequently find yourself reading five. And if you don't, you still kept your identity as a learner alive.</p>
+          </div>
+        </details>
+
+        <details class="mvd-item">
+          <summary>
+            <div class="mvd-summary-head">
+              <div class="mvd-icon" style="background:#FAEEDA;">🤝</div>
+              <div>
+                <strong>Relational</strong>
+                <span>Send one sincere appreciation text.</span>
+              </div>
+            </div>
+            <div class="mvd-caret">▸</div>
+          </summary>
+          <div class="mvd-body">
+            <p><em class="mvd-label">What it actually means:</em> You send a 1-sentence text out of the blue to someone you value. It must be specific, not generic. (e.g., <em>"Hey, I was just thinking about that time you helped me move — just wanted to say I'm really glad you're in my life."</em>)</p>
+            <p><em class="mvd-label">Why it works:</em> Tal Ben-Shahar points out that relationships are the #1 predictor of long-term life satisfaction. A micro-appreciation text triggers a double-hit of dopamine and oxytocin: once for you as you type it (forcing you into a state of gratitude), and once for the recipient. It keeps the "social capital" of your relationships warm with zero maintenance overhead.</p>
+          </div>
+        </details>
+
+        <details class="mvd-item">
+          <summary>
+            <div class="mvd-summary-head">
+              <div class="mvd-icon" style="background:#FAECE7;">❤️</div>
+              <div>
+                <strong>Emotional</strong>
+                <span>Write one bright spot from today.</span>
+              </div>
+            </div>
+            <div class="mvd-caret">▸</div>
+          </summary>
+          <div class="mvd-body">
+            <p><em class="mvd-label">What it actually means:</em> You identify and write down <em>just one</em> tiny thing that didn't suck today. It doesn't have to be a major victory; it can be as small as "the water in the shower was perfectly hot" or "a clean compile on my first try."</p>
+            <p><em class="mvd-label">Why it works:</em> Humans suffer from an evolutionary <strong>negativity bias</strong> — we remember the one rude comment or the one broken feature all day and ignore the 99 things that went right. Forcing yourself to write down a single "bright spot" acts as a cognitive counter-weight. It registers the good experience into your long-term memory buffer, slowly rewiring your default mood over time.</p>
+          </div>
+        </details>
+
       </div>
     </div>
 
