@@ -2100,7 +2100,7 @@ function initNavigation() {
 }
 
 function spireToggleCheck(btn) {
-  if (!btn || !(btn instanceof HTMLElement)) return;
+  if (!btn) return;
   btn.classList.toggle('done');
   btn.setAttribute('aria-pressed', btn.classList.contains('done') ? 'true' : 'false');
   spireUpdateProgress();
