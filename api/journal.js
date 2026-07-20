@@ -34,9 +34,15 @@ module.exports = async function handler(req, res) {
 
     if (req.method === "PUT") {
       const body = getJsonBody(req);
+      const existingEntry = document.entries[date] || {};
       const incomingEntry = sanitizeIncomingEntry(body.entry, document.questions);
+      const discomfort =
+        typeof body.discomfort === "boolean"
+          ? body.discomfort
+          : existingEntry.discomfort === true;
       const storedEntry = {
         ...incomingEntry,
+        discomfort,
         updatedAt: new Date().toISOString(),
       };
 

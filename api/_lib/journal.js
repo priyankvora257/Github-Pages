@@ -63,6 +63,7 @@ function normalizeDocument(input) {
       const value = source[id];
       normalized[id] = typeof value === "string" ? value : "";
     });
+    normalized.discomfort = source.discomfort === true;
     normalized.updatedAt =
       typeof source.updatedAt === "string" ? source.updatedAt : new Date().toISOString();
     entries[date] = normalized;

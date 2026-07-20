@@ -937,6 +937,123 @@ body {
   border-color: #0F6E56;
   color: white;
 }
+.stress-day-dot.is-future {
+  opacity: .4;
+  cursor: not-allowed;
+}
+.stress-day-dot.is-today {
+  box-shadow: 0 0 0 2px #0F6E56;
+}
+.stress-tracker-status {
+  margin-top: .5rem;
+  font-size: 11px;
+  color: #888780;
+}
+.week-review {
+  border: 1px solid #e8e6e0;
+  border-radius: 14px;
+  background: #fbfbf9;
+  padding: 1rem 1.1rem 1.15rem;
+  margin-bottom: 1.25rem;
+}
+.week-review-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.week-review-head h3 {
+  margin: 0;
+  font-size: 16px;
+}
+.week-review-range {
+  font-size: 12px;
+  color: #888780;
+}
+.week-review-note {
+  margin: .5rem 0 0;
+  font-size: 13px;
+  color: #5f5e5a;
+}
+.week-review-body { margin-top: .5rem; }
+.week-review-placeholder {
+  margin: .5rem 0 0;
+  font-size: 13px;
+  color: #5f5e5a;
+}
+.week-review-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: .75rem 0 1rem;
+}
+.week-review-metric {
+  border: 1px solid #e8e6e0;
+  border-radius: 10px;
+  background: #fff;
+  padding: .55rem .7rem;
+  min-width: 140px;
+}
+.week-review-metric-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888780;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+.week-review-metric-value {
+  font-size: 15px;
+  color: #2c2b28;
+  margin-top: .15rem;
+}
+.week-review-virtues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: .35rem;
+}
+.week-review-virtue-pill {
+  font-size: 12px;
+  border: 1px solid #e8e6e0;
+  border-radius: 999px;
+  padding: .1rem .55rem;
+  background: #fff;
+  color: #5f5e5a;
+}
+.week-review-virtue-pill.top {
+  background: #0F6E56;
+  border-color: #0F6E56;
+  color: #fff;
+}
+.week-review-section { margin-top: 1rem; }
+.week-review-section > h4 {
+  margin: 0 0 .35rem;
+  font-size: 13px;
+  color: #2c2b28;
+}
+.week-review-entry {
+  border-left: 2px solid #e8e6e0;
+  padding: .1rem 0 .1rem .7rem;
+  margin: .5rem 0;
+}
+.week-review-entry-date {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888780;
+}
+.week-review-entry-text {
+  margin: .15rem 0 0;
+  font-size: 13px;
+  color: #3a3a36;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.week-review-empty {
+  font-size: 12px;
+  color: #a3a29c;
+  font-style: italic;
+}
 .stress-timer-row {
   display: flex;
   align-items: center;
@@ -1716,15 +1833,16 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
             <div class="stress-qbox">The key to becoming more resilient is to deliberately expose yourself to controlled amounts of stress and learn to manage your internal state.</div>
             <div class="stress-inline-step"><div class="stress-step-num">→</div><div class="stress-inline-step-text">Do hard things even when you do not feel ready. Especially when you do not feel ready.</div></div>
             <div style="margin-top:.75rem; font-size:12px; font-weight:600; color:#5f5e5a;">Track this week</div>
-            <div class="stress-tracker">
-              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">M</div>
-              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">T</div>
-              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">W</div>
-              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">T</div>
-              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">F</div>
-              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">S</div>
-              <div class="stress-day-dot" onclick="event.stopPropagation(); this.classList.toggle('done');">S</div>
+            <div class="stress-tracker" id="discomfort-tracker">
+              <div class="stress-day-dot" data-weekday="0" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">M</div>
+              <div class="stress-day-dot" data-weekday="1" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">T</div>
+              <div class="stress-day-dot" data-weekday="2" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">W</div>
+              <div class="stress-day-dot" data-weekday="3" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">T</div>
+              <div class="stress-day-dot" data-weekday="4" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">F</div>
+              <div class="stress-day-dot" data-weekday="5" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">S</div>
+              <div class="stress-day-dot" data-weekday="6" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">S</div>
             </div>
+            <div id="discomfort-tracker-status" class="stress-tracker-status">Unlock the journal (Reflection → Journal) to save your discomfort days.</div>
           </div>
         </div>
 
@@ -1912,6 +2030,15 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
 
     <div class="callout">
       The Stoics believed philosophy was not something you studied — it was something you practiced. These weekly exercises build the muscle of equanimity over time.
+    </div>
+
+    <div id="week-review" class="week-review">
+      <div class="week-review-head">
+        <h3>📖 Week in review</h3>
+        <span id="week-review-range" class="week-review-range"></span>
+      </div>
+      <p class="week-review-note">Read-only. Auto-gathered from this week's journal entries — surfaced Saturday and Sunday so you can reflect on the pattern of the whole week. Nothing here is interpreted for you; the days are placed side by side so you do the noticing.</p>
+      <div id="week-review-body" class="week-review-body"></div>
     </div>
 
     <div class="card acc-blue">
@@ -2249,6 +2376,8 @@ function showPanel(panelId, btn, shouldScroll) {
 
   activatePanel(panelId);
   setActiveSubPanel(panelId);
+
+  if (panelId === 'weekly') refreshWeeklyFeatures();
 
   if (shouldScroll !== false) scrollToNav();
 }
@@ -2825,6 +2954,7 @@ async function loadJournalEntry() {
     journalState.hydrated = true;
     setJournalClean(data.entry || {});
     setJournalStatus('Loaded ' + date + '. Auto-save runs after 15s idle or when you leave a field.', 'ok');
+    refreshWeeklyFeatures();
   } catch (error) {
     if (String(error.message || '').toLowerCase().indexOf('unauthorized') >= 0) {
       localStorage.removeItem(STOIC_TOKEN_KEY);
@@ -2935,6 +3065,344 @@ async function lockJournal() {
   setAuthButtons();
   writeEntryToUI({});
   setJournalStatus('Locked. Enter passphrase to load and save entries.', '');
+  refreshWeeklyFeatures();
+}
+
+// ---------- Weekly review + discomfort tracking ----------
+var STOIC_WEEK_REVIEW_FIELDS = [
+  { id: 'premeditatio_malorum', label: 'What could go wrong today? (and how will I handle it?)' },
+  { id: 'evening_well', label: 'What did I do well today?' },
+  { id: 'evening_shortfall', label: 'Where did I fall short?' },
+  { id: 'gratitude', label: 'What am I grateful for that I usually take for granted?' }
+];
+
+var STOIC_VIRTUES = [
+  { label: 'patience', words: ['patience', 'patient'] },
+  { label: 'courage', words: ['courage', 'courageous', 'brave', 'bravery'] },
+  { label: 'fairness', words: ['fairness', 'fair', 'justice', 'just'] },
+  { label: 'focus', words: ['focus', 'focused', 'focused attention', 'concentration'] },
+  { label: 'honesty', words: ['honesty', 'honest', 'truthful', 'truthfulness'] },
+  { label: 'restraint', words: ['restraint', 'self control', 'temperance', 'moderation'] },
+  { label: 'craftsmanship', words: ['craftsmanship', 'craft'] },
+  { label: 'wisdom', words: ['wisdom', 'wise', 'prudence'] },
+  { label: 'discipline', words: ['discipline', 'disciplined'] },
+  { label: 'gratitude', words: ['gratitude', 'grateful'] },
+  { label: 'humility', words: ['humility', 'humble'] },
+  { label: 'kindness', words: ['kindness', 'kind', 'compassion', 'compassionate'] }
+];
+
+var STOIC_WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+var STOIC_MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+var weekReviewState = { loading: false };
+
+function stoicWeekMonday(input) {
+  var date = new Date(input.getFullYear(), input.getMonth(), input.getDate());
+  var day = date.getDay();
+  var diff = (day === 0) ? -6 : (1 - day);
+  date.setDate(date.getDate() + diff);
+  return date;
+}
+
+function stoicCurrentWeekDays() {
+  var today = new Date();
+  var todayKey = dateToKey(today);
+  var monday = stoicWeekMonday(today);
+  var days = [];
+  var i;
+  for (i = 0; i < 7; i++) {
+    var dt = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+    var key = dateToKey(dt);
+    days.push({
+      key: key,
+      dayIndex: i,
+      date: dt,
+      isFuture: key > todayKey,
+      isToday: key === todayKey
+    });
+  }
+  return days;
+}
+
+function stoicIsWeekendReviewDay() {
+  var g = new Date().getDay();
+  return g === 6 || g === 0;
+}
+
+function stoicFormatDayLabel(dt) {
+  return STOIC_WEEKDAY_NAMES[dt.getDay()] + ' · ' + STOIC_MONTH_NAMES[dt.getMonth()] + ' ' + dt.getDate();
+}
+
+function stoicShortLabelFromKey(key) {
+  var parsed = parseDateKey(key);
+  if (!parsed) return key;
+  var dt = new Date(parsed.year, parsed.month - 1, parsed.day);
+  return stoicFormatDayLabel(dt);
+}
+
+function stoicHandleUnauthorized() {
+  localStorage.removeItem(STOIC_TOKEN_KEY);
+  journalState.token = '';
+  setAuthButtons();
+  setJournalStatus('Session expired. Enter passphrase again.', 'err');
+  setDiscomfortStatus('Unlock the journal (Reflection → Journal) to save your discomfort days.');
+}
+
+function setDiscomfortStatus(text) {
+  var el = document.getElementById('discomfort-tracker-status');
+  if (el) el.textContent = text;
+}
+
+function stoicSetupDiscomfortTracker() {
+  var days = stoicCurrentWeekDays();
+  document.querySelectorAll('#discomfort-tracker .stress-day-dot').forEach(function(dot) {
+    var idx = Number(dot.dataset.weekday);
+    var day = days[idx];
+    if (!day) return;
+    dot.dataset.dateKey = day.key;
+    dot.classList.toggle('is-future', day.isFuture);
+    dot.classList.toggle('is-today', day.isToday);
+    dot.setAttribute('title', stoicShortLabelFromKey(day.key) + (day.isFuture ? ' (not yet)' : ''));
+  });
+}
+
+function stoicHydrateDiscomfortTracker(byDate) {
+  document.querySelectorAll('#discomfort-tracker .stress-day-dot').forEach(function(dot) {
+    var key = dot.dataset.dateKey;
+    var entry = key ? byDate[key] : null;
+    var done = !!(entry && entry.discomfort === true);
+    dot.classList.toggle('done', done);
+    dot.setAttribute('aria-pressed', done ? 'true' : 'false');
+  });
+}
+
+function stoicClearDiscomfortTracker() {
+  document.querySelectorAll('#discomfort-tracker .stress-day-dot').forEach(function(dot) {
+    dot.classList.remove('done');
+    dot.setAttribute('aria-pressed', 'false');
+  });
+}
+
+function discomfortDotClick(event, el) {
+  event.stopPropagation();
+  if (el.classList.contains('is-future')) {
+    setDiscomfortStatus('That day has not happened yet this week.');
+    return;
+  }
+  if (!journalState.token) {
+    setDiscomfortStatus('Unlock the journal (Reflection → Journal) to save your discomfort days.');
+    return;
+  }
+  toggleDiscomfortForDate(el);
+}
+
+async function toggleDiscomfortForDate(el) {
+  var key = el.dataset.dateKey;
+  if (!key || !apiConfigured()) return;
+  var next = !el.classList.contains('done');
+  setDiscomfortStatus('Saving...');
+  try {
+    var current = await journalRequest('/api/journal?date=' + key, { method: 'GET' });
+    var entry = current.entry || {};
+    var entryFields = {};
+    STOIC_QUESTION_IDS.forEach(function(id) {
+      entryFields[id] = typeof entry[id] === 'string' ? entry[id] : '';
+    });
+    await journalRequest('/api/journal?date=' + key, {
+      method: 'PUT',
+      body: { entry: entryFields, discomfort: next }
+    });
+    el.classList.toggle('done', next);
+    el.setAttribute('aria-pressed', next ? 'true' : 'false');
+    setDiscomfortStatus(next
+      ? 'Marked ' + stoicShortLabelFromKey(key) + ' as a discomfort day.'
+      : 'Cleared ' + stoicShortLabelFromKey(key) + '.');
+    refreshWeeklyFeatures();
+  } catch (error) {
+    if (String(error.message || '').toLowerCase().indexOf('unauthorized') >= 0) {
+      stoicHandleUnauthorized();
+      return;
+    }
+    setDiscomfortStatus('Could not save: ' + error.message);
+  }
+}
+
+function stoicCountVirtues(byDate, days) {
+  var tally = {};
+  STOIC_VIRTUES.forEach(function(v) { tally[v.label] = 0; });
+  days.forEach(function(day) {
+    var entry = byDate[day.key];
+    var raw = entry && typeof entry.morning_intention === 'string' ? entry.morning_intention : '';
+    if (!raw) return;
+    var normalized = ' ' + raw.toLowerCase().replace(/[^a-z]+/g, ' ') + ' ';
+    STOIC_VIRTUES.forEach(function(v) {
+      var matched = v.words.some(function(w) {
+        var needle = ' ' + w.replace(/[^a-z]+/g, ' ') + ' ';
+        return normalized.indexOf(needle) !== -1;
+      });
+      if (matched) tally[v.label] += 1;
+    });
+  });
+  return tally;
+}
+
+function stoicMakeEl(tag, className, text) {
+  var el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text != null) el.textContent = text;
+  return el;
+}
+
+function stoicRenderMetrics(container, byDate, days) {
+  var elapsed = days.filter(function(d) { return !d.isFuture; });
+  var metrics = stoicMakeEl('div', 'week-review-metrics');
+
+  // Virtue frequency
+  var tally = stoicCountVirtues(byDate, elapsed);
+  var ranked = STOIC_VIRTUES
+    .map(function(v) { return { label: v.label, count: tally[v.label] }; })
+    .filter(function(v) { return v.count > 0; })
+    .sort(function(a, b) { return b.count - a.count; });
+  var topCount = ranked.length ? ranked[0].count : 0;
+
+  var virtueMetric = stoicMakeEl('div', 'week-review-metric');
+  virtueMetric.appendChild(stoicMakeEl('div', 'week-review-metric-label', 'Virtue frequency'));
+  if (!ranked.length) {
+    virtueMetric.appendChild(stoicMakeEl('div', 'week-review-metric-value', 'No virtue named yet this week.'));
+  } else {
+    var pills = stoicMakeEl('div', 'week-review-virtues');
+    ranked.forEach(function(v) {
+      var pill = stoicMakeEl('span', 'week-review-virtue-pill' + (v.count === topCount ? ' top' : ''),
+        v.label + ' · ' + v.count);
+      pills.appendChild(pill);
+    });
+    virtueMetric.appendChild(pills);
+  }
+  metrics.appendChild(virtueMetric);
+
+  // Discomfort count
+  var discomfortDays = elapsed.filter(function(d) {
+    var entry = byDate[d.key];
+    return entry && entry.discomfort === true;
+  }).length;
+  var discomfortMetric = stoicMakeEl('div', 'week-review-metric');
+  discomfortMetric.appendChild(stoicMakeEl('div', 'week-review-metric-label', 'Discomfort'));
+  discomfortMetric.appendChild(stoicMakeEl('div', 'week-review-metric-value',
+    'Stepped in ' + discomfortDays + ' of ' + elapsed.length + ' days'));
+  metrics.appendChild(discomfortMetric);
+
+  container.appendChild(metrics);
+}
+
+function stoicRenderSections(container, byDate, days) {
+  var elapsed = days.filter(function(d) { return !d.isFuture; });
+  STOIC_WEEK_REVIEW_FIELDS.forEach(function(field) {
+    var section = stoicMakeEl('div', 'week-review-section');
+    section.appendChild(stoicMakeEl('h4', null, field.label));
+    var any = false;
+    elapsed.forEach(function(day) {
+      var entry = byDate[day.key];
+      var text = entry && typeof entry[field.id] === 'string' ? entry[field.id].trim() : '';
+      if (!text) return;
+      any = true;
+      var block = stoicMakeEl('div', 'week-review-entry');
+      block.appendChild(stoicMakeEl('div', 'week-review-entry-date', stoicFormatDayLabel(day.date)));
+      block.appendChild(stoicMakeEl('p', 'week-review-entry-text', text));
+      section.appendChild(block);
+    });
+    if (!any) {
+      section.appendChild(stoicMakeEl('div', 'week-review-empty', 'No entries for this question yet this week.'));
+    }
+    container.appendChild(section);
+  });
+}
+
+function stoicRenderWeekReview(byDate, days) {
+  var body = document.getElementById('week-review-body');
+  var rangeEl = document.getElementById('week-review-range');
+  if (!body) return;
+  body.innerHTML = '';
+
+  var first = days[0].date;
+  var lastElapsed = days.filter(function(d) { return !d.isFuture; }).slice(-1)[0] || days[0];
+  if (rangeEl) {
+    rangeEl.textContent = stoicFormatDayLabel(first) + ' – ' + stoicFormatDayLabel(lastElapsed.date);
+  }
+
+  if (!stoicIsWeekendReviewDay()) {
+    body.appendChild(stoicMakeEl('p', 'week-review-placeholder',
+      'Come back on Saturday or Sunday to reflect on the whole week. Keep journaling each day — this fills in automatically.'));
+    return;
+  }
+
+  if (!journalState.token) {
+    body.appendChild(stoicMakeEl('p', 'week-review-placeholder',
+      'Unlock the journal (Reflection → Journal) to gather this week\u2019s reflection.'));
+    return;
+  }
+
+  stoicRenderMetrics(body, byDate, days);
+  stoicRenderSections(body, byDate, days);
+}
+
+async function stoicFetchWeekEntries(days) {
+  var byDate = {};
+  var elapsed = days.filter(function(d) { return !d.isFuture; });
+  for (var i = 0; i < elapsed.length; i++) {
+    var key = elapsed[i].key;
+    try {
+      var data = await journalRequest('/api/journal?date=' + key, { method: 'GET' });
+      byDate[key] = data.entry || {};
+    } catch (error) {
+      if (String(error.message || '').toLowerCase().indexOf('unauthorized') >= 0) {
+        throw error;
+      }
+      byDate[key] = null;
+    }
+  }
+  return byDate;
+}
+
+async function refreshWeeklyFeatures() {
+  var days = stoicCurrentWeekDays();
+  stoicSetupDiscomfortTracker();
+
+  if (!journalState.token || !apiConfigured()) {
+    stoicClearDiscomfortTracker();
+    setDiscomfortStatus('Unlock the journal (Reflection → Journal) to save your discomfort days.');
+    stoicRenderWeekReview({}, days);
+    return;
+  }
+  if (weekReviewState.loading) return;
+
+  weekReviewState.loading = true;
+  try {
+    var byDate = await stoicFetchWeekEntries(days);
+    stoicHydrateDiscomfortTracker(byDate);
+    setDiscomfortStatus('Tap a day to mark when you stepped into discomfort.');
+    stoicRenderWeekReview(byDate, days);
+  } catch (error) {
+    if (String(error.message || '').toLowerCase().indexOf('unauthorized') >= 0) {
+      stoicHandleUnauthorized();
+      stoicClearDiscomfortTracker();
+      stoicRenderWeekReview({}, days);
+    }
+  } finally {
+    weekReviewState.loading = false;
+  }
+}
+
+function stoicInitWeekly() {
+  stoicSetupDiscomfortTracker();
+  document.querySelectorAll('#discomfort-tracker .stress-day-dot').forEach(function(dot) {
+    dot.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        discomfortDotClick(e, dot);
+      }
+    });
+  });
+  refreshWeeklyFeatures();
 }
 
 function initJournal() {
@@ -3029,6 +3497,7 @@ initNavigation();
 spireUpdateProgress();
 initStress();
 initJournal();
+stoicInitWeekly();
 </script>
 </body>
 </html>
