@@ -78,8 +78,15 @@ Commit and push to `main` so GitHub Pages serves the updated frontend.
 
 - `PUT /api/journal?date=YYYY-MM-DD`
   - Header: `Authorization: Bearer <token>`
-  - Body: `{ "entry": { ...questionFields } }`
+  - Body: `{ "entry": { ...questionFields }, "discomfort": true }`
+  - `discomfort` is optional. When present it records whether you stepped into voluntary discomfort that day (used by the Weekly tab "Week in review"). When omitted, the stored value is preserved, so saving journal text never clears it.
   - Response: `{ ok, date, entry, questions }`
+
+## Week in review (Weekly tab)
+
+- The Reflection → Weekly tab shows a read-only "Week in review" card, surfaced on Saturday and Sunday.
+- It aggregates the current Monday–Sunday week's journal entries (Mon–Sat on Saturday, Mon–Sun on Sunday) into a weekly view per question, tallies which virtue you named most often, and counts the days you stepped into discomfort.
+- Discomfort days come from the `discomfort` boolean on each daily entry, toggled via the "Do hard things on purpose" tracker on the Stress tab. No extra endpoints or storage are required — it lives in the same gist entry as the journal text.
 
 ## Expected behavior
 
