@@ -1834,13 +1834,13 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
             <div class="stress-inline-step"><div class="stress-step-num">→</div><div class="stress-inline-step-text">Do hard things even when you do not feel ready. Especially when you do not feel ready.</div></div>
             <div style="margin-top:.75rem; font-size:12px; font-weight:600; color:#5f5e5a;">Track this week</div>
             <div class="stress-tracker" id="discomfort-tracker">
-              <div class="stress-day-dot" data-weekday="0" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">M</div>
-              <div class="stress-day-dot" data-weekday="1" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">T</div>
-              <div class="stress-day-dot" data-weekday="2" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">W</div>
-              <div class="stress-day-dot" data-weekday="3" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">T</div>
-              <div class="stress-day-dot" data-weekday="4" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">F</div>
-              <div class="stress-day-dot" data-weekday="5" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">S</div>
-              <div class="stress-day-dot" data-weekday="6" role="button" tabindex="0" aria-pressed="false" onclick="discomfortDotClick(event, this)">S</div>
+              <div class="stress-day-dot" data-weekday="0" role="button" tabindex="0" aria-pressed="false" aria-label="Monday" onclick="discomfortDotClick(event, this)">M</div>
+              <div class="stress-day-dot" data-weekday="1" role="button" tabindex="0" aria-pressed="false" aria-label="Tuesday" onclick="discomfortDotClick(event, this)">T</div>
+              <div class="stress-day-dot" data-weekday="2" role="button" tabindex="0" aria-pressed="false" aria-label="Wednesday" onclick="discomfortDotClick(event, this)">W</div>
+              <div class="stress-day-dot" data-weekday="3" role="button" tabindex="0" aria-pressed="false" aria-label="Thursday" onclick="discomfortDotClick(event, this)">T</div>
+              <div class="stress-day-dot" data-weekday="4" role="button" tabindex="0" aria-pressed="false" aria-label="Friday" onclick="discomfortDotClick(event, this)">F</div>
+              <div class="stress-day-dot" data-weekday="5" role="button" tabindex="0" aria-pressed="false" aria-label="Saturday" onclick="discomfortDotClick(event, this)">S</div>
+              <div class="stress-day-dot" data-weekday="6" role="button" tabindex="0" aria-pressed="false" aria-label="Sunday" onclick="discomfortDotClick(event, this)">S</div>
             </div>
             <div id="discomfort-tracker-status" class="stress-tracker-status">Unlock the journal (Reflection → Journal) to save your discomfort days.</div>
           </div>
@@ -3337,7 +3337,7 @@ function stoicRenderWeekReview(byDate, days) {
 
   if (!journalState.token) {
     body.appendChild(stoicMakeEl('p', 'week-review-placeholder',
-      'Unlock the journal (Reflection → Journal) to gather this week\u2019s reflection.'));
+      'Unlock the journal (Reflection → Journal) to gather this week’s reflection.'));
     return;
   }
 
