@@ -53,6 +53,31 @@ body {
   color:rgba(255,255,255,0.85);
   max-width:480px;
 }
+.theme-toggle {
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  z-index:1;
+  border:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.14);
+  color:white;
+  border-radius:999px;
+  padding:.5rem .85rem;
+  font:inherit;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .15s, border-color .15s, transform .15s;
+}
+.theme-toggle:hover {
+  background:rgba(255,255,255,0.22);
+  border-color:rgba(255,255,255,0.55);
+}
+.theme-toggle:active { transform:scale(.98); }
+.theme-toggle:focus-visible {
+  outline:3px solid rgba(255,255,255,0.6);
+  outline-offset:3px;
+}
 
 /* NAV TABS */
 .nav-shell {
@@ -1096,11 +1121,207 @@ body {
 .resp-card p { font-size:13px; color:#5F5E5A; line-height:1.55; }
 
 footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b4b2a9; }
+
+/* DARK THEME */
+body.dark-theme {
+  background:#11111a;
+  color:#f4f1e8;
+}
+body.dark-theme .hero {
+  background:linear-gradient(135deg, #090917 0%, #211f48 55%, #393273 100%);
+}
+body.dark-theme .nav-shell,
+body.dark-theme .nav-sub,
+body.dark-theme .main-btn,
+body.dark-theme .sub-btn.active,
+body.dark-theme .card,
+body.dark-theme .spire-check-dot,
+body.dark-theme .spire-detail,
+body.dark-theme .control-item,
+body.dark-theme .btn,
+body.dark-theme .quote-card,
+body.dark-theme .journal-card,
+body.dark-theme .journal-auth,
+body.dark-theme .stress-mode-btn,
+body.dark-theme .stress-skill-pill,
+body.dark-theme .stress-level,
+body.dark-theme .stress-mini-card,
+body.dark-theme .stress-card,
+body.dark-theme .stress-stretch-step,
+body.dark-theme .resp-card,
+body.dark-theme .stress-timer-btn {
+  background:#1b1b28;
+  border-color:#333247;
+}
+body.dark-theme .nav-shell {
+  box-shadow:0 1px 0 rgba(255,255,255,0.03);
+}
+body.dark-theme .nav-sub,
+body.dark-theme .spire-detail[open] summary,
+body.dark-theme .mvd-item,
+body.dark-theme .mvd-item[open] summary,
+body.dark-theme .journal-help,
+body.dark-theme .journal-help[open] summary,
+body.dark-theme .journal-tool-btn,
+body.dark-theme .journal-card textarea,
+body.dark-theme .journal-date-picker,
+body.dark-theme .prompt-box,
+body.dark-theme .stress-note,
+body.dark-theme .stress-qbox,
+body.dark-theme .stress-step-num,
+body.dark-theme .stress-stretch-num,
+body.dark-theme .stress-stretch-badge,
+body.dark-theme .stress-day-dot,
+body.dark-theme .week-review,
+body.dark-theme .week-review-metric,
+body.dark-theme .week-review-virtue-pill {
+  background:#242438;
+  border-color:#3a394f;
+}
+body.dark-theme .nav-btn,
+body.dark-theme .section-head p,
+body.dark-theme .card-body,
+body.dark-theme .spire-check-copy,
+body.dark-theme .spire-min-item span,
+body.dark-theme .spire-detail-head span,
+body.dark-theme .spire-detail-caret,
+body.dark-theme .spire-detail-body,
+body.dark-theme .mvd-summary-head span,
+body.dark-theme .mvd-caret,
+body.dark-theme .mvd-body,
+body.dark-theme .ctrl-sub,
+body.dark-theme .quote-attr,
+body.dark-theme .journal-help summary,
+body.dark-theme .journal-help-body,
+body.dark-theme .journal-tool-btn,
+body.dark-theme .journal-date,
+body.dark-theme .journal-auth-status,
+body.dark-theme .section-label,
+body.dark-theme .stress-mode-btn,
+body.dark-theme .stress-skill-pill-num,
+body.dark-theme .stress-mini-card h4,
+body.dark-theme .stress-mini-card p,
+body.dark-theme .stress-note,
+body.dark-theme .stress-level-examples,
+body.dark-theme .stress-card-body p,
+body.dark-theme .stress-card-sub,
+body.dark-theme .stress-inline-step-text,
+body.dark-theme .stress-pill,
+body.dark-theme .stress-compound-arrow,
+body.dark-theme .stress-stretch-detail,
+body.dark-theme .stress-timer-display,
+body.dark-theme .stress-timer-meta,
+body.dark-theme .resp-card p,
+body.dark-theme .week-review-range,
+body.dark-theme .week-review-note,
+body.dark-theme .week-review-placeholder,
+body.dark-theme .week-review-metric-label,
+body.dark-theme .week-review-virtue-pill,
+body.dark-theme .week-review-entry-text,
+body.dark-theme .week-review-empty,
+body.dark-theme footer {
+  color:#b9b6ca;
+}
+body.dark-theme .nav-btn:hover,
+body.dark-theme .section-head h2,
+body.dark-theme .card-title,
+body.dark-theme .spire-min-item strong,
+body.dark-theme .spire-detail-head strong,
+body.dark-theme .spire-detail-body li strong,
+body.dark-theme .mvd-summary-head strong,
+body.dark-theme .mvd-body strong,
+body.dark-theme .ctrl-text,
+body.dark-theme .btn,
+body.dark-theme .quote-text,
+body.dark-theme .journal-auth-top strong,
+body.dark-theme .journal-card textarea,
+body.dark-theme .journal-date-picker,
+body.dark-theme .stress-skill-pill-name,
+body.dark-theme .stress-card-title,
+body.dark-theme .stress-stretch-title,
+body.dark-theme .week-review-head h3,
+body.dark-theme .week-review-metric-value,
+body.dark-theme .week-review-section > h4,
+body.dark-theme [style*="color:#1a1a18"],
+body.dark-theme [style*="color: #1a1a18"] {
+  color:#f4f1e8 !important;
+}
+body.dark-theme .main-btn.active,
+body.dark-theme .sub-btn.active,
+body.dark-theme .stress-mode-btn.active,
+body.dark-theme .stress-skill-pill.active,
+body.dark-theme .stress-stretch-step.active {
+  background:#2f2b54;
+  border-color:#7068ce;
+}
+body.dark-theme .main-btn.active,
+body.dark-theme .sub-btn.active,
+body.dark-theme .journal-card h3,
+body.dark-theme .journal-help summary strong,
+body.dark-theme .journal-tool-btn:hover,
+body.dark-theme .stress-mode-btn.active,
+body.dark-theme .stress-skill-pill.active .stress-skill-pill-name,
+body.dark-theme .prompt-box,
+body.dark-theme .stress-qbox,
+body.dark-theme [style*="color:#26215C"],
+body.dark-theme [style*="color: #26215C"] {
+  color:#c9c4ff !important;
+}
+body.dark-theme .card:hover,
+body.dark-theme .control-item:hover,
+body.dark-theme .stress-card.open {
+  box-shadow:0 4px 18px rgba(0,0,0,0.32);
+}
+body.dark-theme .btn:hover,
+body.dark-theme .journal-card textarea:focus,
+body.dark-theme .journal-date-picker:focus,
+body.dark-theme .journal-auth-row input:focus {
+  background:#292941;
+}
+body.dark-theme .journal-auth-row input {
+  background:#242438;
+  border-color:#3a394f;
+  color:#f4f1e8;
+}
+body.dark-theme .journal-card textarea::placeholder { color:#7d7a91; }
+body.dark-theme .callout {
+  background:#2f2b54;
+  border-color:#7068ce;
+  color:#dedbff;
+}
+body.dark-theme .summary-bar {
+  background:#05050a;
+}
+body.dark-theme .stress-detail-panel {
+  background:#2f2b54 !important;
+}
+body.dark-theme .stress-detail-panel div {
+  color:#dedbff !important;
+}
+body.dark-theme .control-item.mine,
+body.dark-theme .verdict-box.v-good {
+  background:#103329;
+}
+body.dark-theme .control-item.notmine,
+body.dark-theme .verdict-box.v-warn {
+  background:#3a1910;
+}
+body.dark-theme .verdict-box.v-mixed {
+  background:#3a2a0e;
+}
+@media(max-width:640px) {
+  .theme-toggle {
+    top:.75rem;
+    right:.75rem;
+    padding:.45rem .7rem;
+  }
+}
 </style>
 </head>
 <body>
 
 <div class="hero">
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" onclick="toggleTheme()">🌙 Dark</button>
   <div class="hero-label">Ancient wisdom for modern life</div>
   <h1>Stoic Daily Toolkit</h1>
   <p>Practical techniques from Epictetus, Marcus Aurelius, and Seneca — organized for morning, evening, and every difficult moment in between.</p>
@@ -2291,6 +2512,36 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
 <footer>Built from Pigliucci's <em>How to Be a Stoic</em> &amp; primary texts: Epictetus' <em>Enchiridion</em>, Marcus Aurelius' <em>Meditations</em>, Seneca's <em>Letters from a Stoic</em></footer>
 
 <script>
+var STOIC_THEME_KEY = 'stoic_theme';
+var STOIC_LIGHT_THEME_COLOR = '#26215C';
+var STOIC_DARK_THEME_COLOR = '#090917';
+
+function applyTheme(theme) {
+  var isDark = theme === 'dark';
+  var toggle = document.getElementById('theme-toggle');
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+
+  document.body.classList.toggle('dark-theme', isDark);
+  if (toggle) {
+    toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    toggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  }
+  if (themeMeta) {
+    themeMeta.setAttribute('content', isDark ? STOIC_DARK_THEME_COLOR : STOIC_LIGHT_THEME_COLOR);
+  }
+}
+
+function toggleTheme() {
+  var nextTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
+  localStorage.setItem(STOIC_THEME_KEY, nextTheme);
+  applyTheme(nextTheme);
+}
+
+function initTheme() {
+  var savedTheme = localStorage.getItem(STOIC_THEME_KEY);
+  applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+}
+
 var NAV_GROUPS = {
   rituals: {
     items: [
@@ -3510,6 +3761,7 @@ function initJournal() {
   }
 }
 
+initTheme();
 initNavigation();
 spireUpdateProgress();
 initStress();
