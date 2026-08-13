@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stoic Daily Toolkit</title>
-<meta name="theme-color" content="#26215C">
+<meta name="theme-color" content="#26215C" data-light-color="#26215C" data-dark-color="#090917">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Stoic Daily">
 <link rel="icon" type="image/png" href="./stoic_app_icon.png">
@@ -1349,13 +1349,15 @@ body.dark-theme .verdict-box.v-mixed {
       var isDark = localStorage.getItem('stoic_theme') === 'dark';
       var toggle = document.getElementById('theme-toggle');
       var themeMeta = document.querySelector('meta[name="theme-color"]');
+      var lightThemeColor = themeMeta.dataset.lightColor;
+      var darkThemeColor = themeMeta.dataset.darkColor;
       document.body.classList.toggle('dark-theme', isDark);
       if (toggle) {
         toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
         toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
         toggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
       }
-      if (themeMeta) themeMeta.setAttribute('content', isDark ? '#090917' : '#26215C');
+      themeMeta.setAttribute('content', isDark ? darkThemeColor : lightThemeColor);
     }());
   </script>
   <div class="hero-label">Ancient wisdom for modern life</div>
@@ -2549,8 +2551,9 @@ body.dark-theme .verdict-box.v-mixed {
 
 <script>
 var STOIC_THEME_KEY = 'stoic_theme';
-var STOIC_LIGHT_THEME_COLOR = '#26215C';
-var STOIC_DARK_THEME_COLOR = '#090917';
+var STOIC_THEME_META = document.querySelector('meta[name="theme-color"]');
+var STOIC_LIGHT_THEME_COLOR = STOIC_THEME_META.dataset.lightColor;
+var STOIC_DARK_THEME_COLOR = STOIC_THEME_META.dataset.darkColor;
 
 function applyTheme(theme) {
   var isDark = theme === 'dark';
