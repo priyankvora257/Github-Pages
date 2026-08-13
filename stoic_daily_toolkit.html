@@ -2558,31 +2558,19 @@ var STOIC_DARK_THEME_COLOR = STOIC_THEME_META.dataset.darkColor;
 function applyTheme(theme) {
   var isDark = theme === 'dark';
   var toggle = document.getElementById('theme-toggle');
-  var themeMeta = document.querySelector('meta[name="theme-color"]');
-
-  if (!themeMeta) {
-    themeMeta = document.createElement('meta');
-    themeMeta.setAttribute('name', 'theme-color');
-    document.head.appendChild(themeMeta);
-  }
   document.body.classList.toggle('dark-theme', isDark);
   if (toggle) {
     toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
     toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
     toggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
   }
-  themeMeta.setAttribute('content', isDark ? STOIC_DARK_THEME_COLOR : STOIC_LIGHT_THEME_COLOR);
+  STOIC_THEME_META.setAttribute('content', isDark ? STOIC_DARK_THEME_COLOR : STOIC_LIGHT_THEME_COLOR);
 }
 
 function toggleTheme() {
   var nextTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
   localStorage.setItem(STOIC_THEME_KEY, nextTheme);
   applyTheme(nextTheme);
-}
-
-function initTheme() {
-  var savedTheme = localStorage.getItem(STOIC_THEME_KEY);
-  applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
 }
 
 var NAV_GROUPS = {
@@ -2895,8 +2883,9 @@ function stressShowSkill(index) {
 function stressPickLevel(index) {
   var examples = document.getElementById('stress-level-examples');
   var items = stressLevelExamples[index];
+  var html;
   if (!examples || !items) return;
-  var html = '<div class="stress-level-heading">Level ' + (index + 1) + ' examples</div>';
+  html = '<div class="stress-level-heading">Level ' + (index + 1) + ' examples</div>';
 
   document.querySelectorAll('#stress-level-selector .stress-level').forEach(function(levelBtn, levelIndex) {
     levelBtn.classList.toggle('active', levelIndex === index);
@@ -3804,7 +3793,7 @@ function initJournal() {
   }
 }
 
-initTheme();
+applyTheme(localStorage.getItem(STOIC_THEME_KEY) === 'dark' ? 'dark' : 'light');
 initNavigation();
 spireUpdateProgress();
 initStress();
