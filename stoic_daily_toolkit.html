@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stoic Daily Toolkit</title>
-<meta name="theme-color" content="#26215C">
+<meta name="theme-color" content="#26215C" data-light-color="#26215C" data-dark-color="#090917">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Stoic Daily">
 <link rel="icon" type="image/png" href="./stoic_app_icon.png">
@@ -52,6 +52,31 @@ body {
   font-size:13px; font-style:italic;
   color:rgba(255,255,255,0.85);
   max-width:480px;
+}
+.theme-toggle {
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  z-index:1;
+  border:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.14);
+  color:white;
+  border-radius:999px;
+  padding:.5rem .85rem;
+  font:inherit;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .15s, border-color .15s, transform .15s;
+}
+.theme-toggle:hover {
+  background:rgba(255,255,255,0.22);
+  border-color:rgba(255,255,255,0.55);
+}
+.theme-toggle:active { transform:scale(.98); }
+.theme-toggle:focus-visible {
+  outline:3px solid rgba(255,255,255,0.6);
+  outline-offset:3px;
 }
 
 /* NAV TABS */
@@ -699,6 +724,17 @@ body {
   padding: 1rem 1.1rem;
   margin-bottom: 1rem;
 }
+.stress-detail-title {
+  font-size:14px;
+  font-weight:700;
+  color:var(--skill-color);
+  margin-bottom:.45rem;
+}
+.stress-detail-description {
+  font-size:13px;
+  line-height:1.65;
+  color:var(--skill-color);
+}
 .stress-mini-card {
   background: white;
   border: 1px solid #e8e6e0;
@@ -914,6 +950,11 @@ body {
   margin-top: .6rem;
 }
 .stress-level-examples.show { display: block; }
+.stress-level-heading {
+  font-weight:600;
+  color:#1a1a18;
+  margin-bottom:5px;
+}
 .stress-tracker {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -1081,6 +1122,13 @@ body {
   color: #9a978d;
   font-variant-numeric: tabular-nums;
 }
+.inline-strong { color:#1a1a18; }
+.track-label {
+  margin-top:.75rem;
+  font-size:12px;
+  font-weight:600;
+  color:#5f5e5a;
+}
 @media(max-width:640px) {
   .stress-detail-grid,
   .stress-grid { grid-template-columns: 1fr; }
@@ -1096,11 +1144,222 @@ body {
 .resp-card p { font-size:13px; color:#5F5E5A; line-height:1.55; }
 
 footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b4b2a9; }
+
+/* DARK THEME */
+body.dark-theme {
+  background:#11111a;
+  color:#f4f1e8;
+}
+body.dark-theme .hero {
+  background:linear-gradient(135deg, #090917 0%, #211f48 55%, #393273 100%);
+}
+body.dark-theme .nav-shell,
+body.dark-theme .nav-sub,
+body.dark-theme .main-btn,
+body.dark-theme .sub-btn.active,
+body.dark-theme .card,
+body.dark-theme .spire-check-dot,
+body.dark-theme .spire-detail,
+body.dark-theme .control-item,
+body.dark-theme .btn,
+body.dark-theme .quote-card,
+body.dark-theme .journal-card,
+body.dark-theme .journal-auth,
+body.dark-theme .stress-mode-btn,
+body.dark-theme .stress-skill-pill,
+body.dark-theme .stress-level,
+body.dark-theme .stress-mini-card,
+body.dark-theme .stress-card,
+body.dark-theme .stress-stretch-step,
+body.dark-theme .resp-card,
+body.dark-theme .stress-timer-btn {
+  background:#1b1b28;
+  border-color:#333247;
+}
+body.dark-theme .nav-shell {
+  box-shadow:0 1px 0 rgba(255,255,255,0.03);
+}
+body.dark-theme .nav-sub,
+body.dark-theme .spire-detail[open] summary,
+body.dark-theme .mvd-item,
+body.dark-theme .mvd-item[open] summary,
+body.dark-theme .journal-help,
+body.dark-theme .journal-help[open] summary,
+body.dark-theme .journal-tool-btn,
+body.dark-theme .journal-card textarea,
+body.dark-theme .journal-date-picker,
+body.dark-theme .prompt-box,
+body.dark-theme .stress-note,
+body.dark-theme .stress-qbox,
+body.dark-theme .stress-step-num,
+body.dark-theme .stress-stretch-num,
+body.dark-theme .stress-stretch-badge,
+body.dark-theme .stress-day-dot,
+body.dark-theme .week-review,
+body.dark-theme .week-review-metric,
+body.dark-theme .week-review-virtue-pill {
+  background:#242438;
+  border-color:#3a394f;
+}
+body.dark-theme .nav-btn,
+body.dark-theme .section-head p,
+body.dark-theme .card-body,
+body.dark-theme .spire-check-copy,
+body.dark-theme .spire-min-item span,
+body.dark-theme .spire-detail-head span,
+body.dark-theme .spire-detail-caret,
+body.dark-theme .spire-detail-body,
+body.dark-theme .mvd-summary-head span,
+body.dark-theme .mvd-caret,
+body.dark-theme .mvd-body,
+body.dark-theme .ctrl-sub,
+body.dark-theme .quote-attr,
+body.dark-theme .journal-help summary,
+body.dark-theme .journal-help-body,
+body.dark-theme .journal-tool-btn,
+body.dark-theme .journal-date,
+body.dark-theme .journal-auth-status,
+body.dark-theme .section-label,
+body.dark-theme .stress-mode-btn,
+body.dark-theme .stress-skill-pill-num,
+body.dark-theme .stress-mini-card h4,
+body.dark-theme .stress-mini-card p,
+body.dark-theme .stress-note,
+body.dark-theme .stress-level-examples,
+body.dark-theme .stress-card-body p,
+body.dark-theme .stress-card-sub,
+body.dark-theme .stress-inline-step-text,
+body.dark-theme .stress-pill,
+body.dark-theme .stress-compound-arrow,
+body.dark-theme .stress-stretch-detail,
+body.dark-theme .stress-timer-display,
+body.dark-theme .stress-timer-meta,
+body.dark-theme .resp-card p,
+body.dark-theme .week-review-range,
+body.dark-theme .week-review-note,
+body.dark-theme .week-review-placeholder,
+body.dark-theme .week-review-metric-label,
+body.dark-theme .week-review-virtue-pill,
+body.dark-theme .week-review-entry-text,
+body.dark-theme .week-review-empty,
+body.dark-theme footer {
+  color:#b9b6ca;
+}
+body.dark-theme .nav-btn:hover,
+body.dark-theme .section-head h2,
+body.dark-theme .card-title,
+body.dark-theme .spire-min-item strong,
+body.dark-theme .spire-detail-head strong,
+body.dark-theme .spire-detail-body li strong,
+body.dark-theme .mvd-summary-head strong,
+body.dark-theme .mvd-body strong,
+body.dark-theme .ctrl-text,
+body.dark-theme .btn,
+body.dark-theme .quote-text,
+body.dark-theme .journal-auth-top strong,
+body.dark-theme .journal-card textarea,
+body.dark-theme .journal-date-picker,
+body.dark-theme .stress-skill-pill-name,
+body.dark-theme .stress-card-title,
+body.dark-theme .stress-stretch-title,
+body.dark-theme .stress-level-heading,
+body.dark-theme .inline-strong,
+body.dark-theme .week-review-head h3,
+body.dark-theme .week-review-metric-value,
+body.dark-theme .week-review-section > h4 {
+  color:#f4f1e8 !important;
+}
+body.dark-theme .main-btn.active,
+body.dark-theme .sub-btn.active,
+body.dark-theme .stress-mode-btn.active,
+body.dark-theme .stress-skill-pill.active,
+body.dark-theme .stress-stretch-step.active {
+  background:#2f2b54;
+  border-color:#7068ce;
+}
+body.dark-theme .main-btn.active,
+body.dark-theme .sub-btn.active,
+body.dark-theme .journal-card h3,
+body.dark-theme .journal-help summary strong,
+body.dark-theme .journal-tool-btn:hover,
+body.dark-theme .stress-mode-btn.active,
+body.dark-theme .stress-skill-pill.active .stress-skill-pill-name,
+body.dark-theme .prompt-box,
+body.dark-theme .stress-qbox {
+  color:#c9c4ff !important;
+}
+body.dark-theme .card:hover,
+body.dark-theme .control-item:hover,
+body.dark-theme .stress-card.open {
+  box-shadow:0 4px 18px rgba(0,0,0,0.32);
+}
+body.dark-theme .btn:hover,
+body.dark-theme .journal-card textarea:focus,
+body.dark-theme .journal-date-picker:focus,
+body.dark-theme .journal-auth-row input:focus {
+  background:#292941;
+}
+body.dark-theme .journal-auth-row input {
+  background:#242438;
+  border-color:#3a394f;
+  color:#f4f1e8;
+}
+body.dark-theme .journal-card textarea::placeholder { color:#7d7a91; }
+body.dark-theme .callout {
+  background:#2f2b54;
+  border-color:#7068ce;
+  color:#dedbff;
+}
+body.dark-theme .summary-bar {
+  background:#05050a;
+}
+body.dark-theme .stress-detail-panel {
+  background:#2f2b54 !important;
+}
+body.dark-theme .stress-detail-title,
+body.dark-theme .stress-detail-description {
+  color:#dedbff !important;
+}
+body.dark-theme .control-item.mine,
+body.dark-theme .verdict-box.v-good {
+  background:#103329;
+}
+body.dark-theme .control-item.notmine,
+body.dark-theme .verdict-box.v-warn {
+  background:#3a1910;
+}
+body.dark-theme .verdict-box.v-mixed {
+  background:#3a2a0e;
+}
+@media(max-width:640px) {
+  .theme-toggle {
+    top:.75rem;
+    right:.75rem;
+    padding:.45rem .7rem;
+  }
+}
 </style>
 </head>
 <body>
 
 <div class="hero">
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme" onclick="toggleTheme()">Theme</button>
+  <script>
+    (function() {
+      var isDark = localStorage.getItem('stoic_theme') === 'dark';
+      var toggle = document.getElementById('theme-toggle');
+      var themeMeta = document.querySelector('meta[name="theme-color"]');
+      var lightThemeColor = themeMeta.dataset.lightColor;
+      var darkThemeColor = themeMeta.dataset.darkColor;
+      document.body.classList.toggle('dark-theme', isDark);
+      if (toggle) {
+        toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+        toggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+      }
+      themeMeta.setAttribute('content', isDark ? darkThemeColor : lightThemeColor);
+    }());
+  </script>
   <div class="hero-label">Ancient wisdom for modern life</div>
   <h1>Stoic Daily Toolkit</h1>
   <p>Practical techniques from Epictetus, Marcus Aurelius, and Seneca — organized for morning, evening, and every difficult moment in between.</p>
@@ -1660,7 +1919,7 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
       <div class="section-label">Stretch — skill #3 · how to make the impossible your new normal</div>
 
       <div class="stress-note">
-        <strong style="color:#1a1a18;">Core idea:</strong> Strengthening happens inside your comfort zone. Stretching happens outside it. That is where the growth lives. Your ceiling is mostly learned, and this flow helps you move past it.
+        <strong class="inline-strong">Core idea:</strong> Strengthening happens inside your comfort zone. Stretching happens outside it. That is where the growth lives. Your ceiling is mostly learned, and this flow helps you move past it.
       </div>
 
       <div class="stress-steps">
@@ -1807,7 +2066,7 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
       </div>
 
       <div class="stress-note" style="margin-top:1rem;">
-        <strong style="color:#1a1a18;">Stoic crosswalk:</strong> Step 1–2 mirrors Epictetus: examine the impression before acting on it. Step 4 is Stoic assent in action. Step 5 builds Marcus-style evidence through action. Step 6 echoes Seneca's voluntary hardship becoming equanimity.
+        <strong class="inline-strong">Stoic crosswalk:</strong> Step 1–2 mirrors Epictetus: examine the impression before acting on it. Step 4 is Stoic assent in action. Step 5 builds Marcus-style evidence through action. Step 6 echoes Seneca's voluntary hardship becoming equanimity.
       </div>
     </div>
 
@@ -1832,7 +2091,7 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
             <p>Your emotional brain believes evidence, not affirmations. Each hard thing you do is proof deposited in your resilience account.</p>
             <div class="stress-qbox">The key to becoming more resilient is to deliberately expose yourself to controlled amounts of stress and learn to manage your internal state.</div>
             <div class="stress-inline-step"><div class="stress-step-num">→</div><div class="stress-inline-step-text">Do hard things even when you do not feel ready. Especially when you do not feel ready.</div></div>
-            <div style="margin-top:.75rem; font-size:12px; font-weight:600; color:#5f5e5a;">Track this week</div>
+            <div class="track-label">Track this week</div>
             <div class="stress-tracker" id="discomfort-tracker">
               <div class="stress-day-dot" data-weekday="0" role="button" tabindex="0" aria-pressed="false" aria-label="Monday" onclick="discomfortDotClick(event, this)">M</div>
               <div class="stress-day-dot" data-weekday="1" role="button" tabindex="0" aria-pressed="false" aria-label="Tuesday" onclick="discomfortDotClick(event, this)">T</div>
@@ -2291,6 +2550,29 @@ footer { text-align:center; padding:2.5rem 1rem 1.5rem; font-size:12px; color:#b
 <footer>Built from Pigliucci's <em>How to Be a Stoic</em> &amp; primary texts: Epictetus' <em>Enchiridion</em>, Marcus Aurelius' <em>Meditations</em>, Seneca's <em>Letters from a Stoic</em></footer>
 
 <script>
+var STOIC_THEME_KEY = 'stoic_theme';
+var STOIC_THEME_META = document.querySelector('meta[name="theme-color"]');
+var STOIC_LIGHT_THEME_COLOR = STOIC_THEME_META.dataset.lightColor;
+var STOIC_DARK_THEME_COLOR = STOIC_THEME_META.dataset.darkColor;
+
+function applyTheme(theme) {
+  var isDark = theme === 'dark';
+  var toggle = document.getElementById('theme-toggle');
+  document.body.classList.toggle('dark-theme', isDark);
+  if (toggle) {
+    toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    toggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  }
+  STOIC_THEME_META.setAttribute('content', isDark ? STOIC_DARK_THEME_COLOR : STOIC_LIGHT_THEME_COLOR);
+}
+
+function toggleTheme() {
+  var nextTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
+  localStorage.setItem(STOIC_THEME_KEY, nextTheme);
+  applyTheme(nextTheme);
+}
+
 var NAV_GROUPS = {
   rituals: {
     items: [
@@ -2582,9 +2864,9 @@ function stressShowSkill(index) {
   });
 
   detail.innerHTML =
-    '<div class="stress-detail-panel" style="background:' + skill.bg + ';">' +
-      '<div style="font-size:14px; font-weight:700; color:' + skill.color + '; margin-bottom:.45rem;">Skill ' + (index + 1) + ': ' + skill.name + '</div>' +
-      '<div style="font-size:13px; line-height:1.65; color:' + skill.color + ';">' + skill.description + '</div>' +
+    '<div class="stress-detail-panel" style="--skill-color:' + skill.color + '; background:' + skill.bg + ';">' +
+      '<div class="stress-detail-title">Skill ' + (index + 1) + ': ' + skill.name + '</div>' +
+      '<div class="stress-detail-description">' + skill.description + '</div>' +
     '</div>' +
     '<div class="stress-detail-grid">' +
       '<div class="stress-mini-card">' +
@@ -2601,8 +2883,8 @@ function stressShowSkill(index) {
 function stressPickLevel(index) {
   var examples = document.getElementById('stress-level-examples');
   var items = stressLevelExamples[index];
-  var html = '<div style="font-weight:600; color:#1a1a18; margin-bottom:5px;">Level ' + (index + 1) + ' examples</div>';
   if (!examples || !items) return;
+  var html = '<div class="stress-level-heading">Level ' + (index + 1) + ' examples</div>';
 
   document.querySelectorAll('#stress-level-selector .stress-level').forEach(function(levelBtn, levelIndex) {
     levelBtn.classList.toggle('active', levelIndex === index);
