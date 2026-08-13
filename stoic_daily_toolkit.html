@@ -724,6 +724,17 @@ body {
   padding: 1rem 1.1rem;
   margin-bottom: 1rem;
 }
+.stress-detail-title {
+  font-size:14px;
+  font-weight:700;
+  color:var(--skill-color);
+  margin-bottom:.45rem;
+}
+.stress-detail-description {
+  font-size:13px;
+  line-height:1.65;
+  color:var(--skill-color);
+}
 .stress-mini-card {
   background: white;
   border: 1px solid #e8e6e0;
@@ -939,6 +950,11 @@ body {
   margin-top: .6rem;
 }
 .stress-level-examples.show { display: block; }
+.stress-level-heading {
+  font-weight:600;
+  color:#1a1a18;
+  margin-bottom:5px;
+}
 .stress-tracker {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -1106,6 +1122,13 @@ body {
   color: #9a978d;
   font-variant-numeric: tabular-nums;
 }
+.inline-strong { color:#1a1a18; }
+.track-label {
+  margin-top:.75rem;
+  font-size:12px;
+  font-weight:600;
+  color:#5f5e5a;
+}
 @media(max-width:640px) {
   .stress-detail-grid,
   .stress-grid { grid-template-columns: 1fr; }
@@ -1239,11 +1262,11 @@ body.dark-theme .journal-date-picker,
 body.dark-theme .stress-skill-pill-name,
 body.dark-theme .stress-card-title,
 body.dark-theme .stress-stretch-title,
+body.dark-theme .stress-level-heading,
+body.dark-theme .inline-strong,
 body.dark-theme .week-review-head h3,
 body.dark-theme .week-review-metric-value,
-body.dark-theme .week-review-section > h4,
-body.dark-theme [style*="color:#1a1a18"],
-body.dark-theme [style*="color: #1a1a18"] {
+body.dark-theme .week-review-section > h4 {
   color:#f4f1e8 !important;
 }
 body.dark-theme .main-btn.active,
@@ -1262,9 +1285,7 @@ body.dark-theme .journal-tool-btn:hover,
 body.dark-theme .stress-mode-btn.active,
 body.dark-theme .stress-skill-pill.active .stress-skill-pill-name,
 body.dark-theme .prompt-box,
-body.dark-theme .stress-qbox,
-body.dark-theme [style*="color:#26215C"],
-body.dark-theme [style*="color: #26215C"] {
+body.dark-theme .stress-qbox {
   color:#c9c4ff !important;
 }
 body.dark-theme .card:hover,
@@ -1295,7 +1316,8 @@ body.dark-theme .summary-bar {
 body.dark-theme .stress-detail-panel {
   background:#2f2b54 !important;
 }
-body.dark-theme .stress-detail-panel div {
+body.dark-theme .stress-detail-title,
+body.dark-theme .stress-detail-description {
   color:#dedbff !important;
 }
 body.dark-theme .control-item.mine,
@@ -1881,7 +1903,7 @@ body.dark-theme .verdict-box.v-mixed {
       <div class="section-label">Stretch — skill #3 · how to make the impossible your new normal</div>
 
       <div class="stress-note">
-        <strong style="color:#1a1a18;">Core idea:</strong> Strengthening happens inside your comfort zone. Stretching happens outside it. That is where the growth lives. Your ceiling is mostly learned, and this flow helps you move past it.
+        <strong class="inline-strong">Core idea:</strong> Strengthening happens inside your comfort zone. Stretching happens outside it. That is where the growth lives. Your ceiling is mostly learned, and this flow helps you move past it.
       </div>
 
       <div class="stress-steps">
@@ -2028,7 +2050,7 @@ body.dark-theme .verdict-box.v-mixed {
       </div>
 
       <div class="stress-note" style="margin-top:1rem;">
-        <strong style="color:#1a1a18;">Stoic crosswalk:</strong> Step 1–2 mirrors Epictetus: examine the impression before acting on it. Step 4 is Stoic assent in action. Step 5 builds Marcus-style evidence through action. Step 6 echoes Seneca's voluntary hardship becoming equanimity.
+        <strong class="inline-strong">Stoic crosswalk:</strong> Step 1–2 mirrors Epictetus: examine the impression before acting on it. Step 4 is Stoic assent in action. Step 5 builds Marcus-style evidence through action. Step 6 echoes Seneca's voluntary hardship becoming equanimity.
       </div>
     </div>
 
@@ -2053,7 +2075,7 @@ body.dark-theme .verdict-box.v-mixed {
             <p>Your emotional brain believes evidence, not affirmations. Each hard thing you do is proof deposited in your resilience account.</p>
             <div class="stress-qbox">The key to becoming more resilient is to deliberately expose yourself to controlled amounts of stress and learn to manage your internal state.</div>
             <div class="stress-inline-step"><div class="stress-step-num">→</div><div class="stress-inline-step-text">Do hard things even when you do not feel ready. Especially when you do not feel ready.</div></div>
-            <div style="margin-top:.75rem; font-size:12px; font-weight:600; color:#5f5e5a;">Track this week</div>
+            <div class="track-label">Track this week</div>
             <div class="stress-tracker" id="discomfort-tracker">
               <div class="stress-day-dot" data-weekday="0" role="button" tabindex="0" aria-pressed="false" aria-label="Monday" onclick="discomfortDotClick(event, this)">M</div>
               <div class="stress-day-dot" data-weekday="1" role="button" tabindex="0" aria-pressed="false" aria-label="Tuesday" onclick="discomfortDotClick(event, this)">T</div>
@@ -2521,14 +2543,17 @@ function applyTheme(theme) {
   var toggle = document.getElementById('theme-toggle');
   var themeMeta = document.querySelector('meta[name="theme-color"]');
 
+  if (!themeMeta) {
+    themeMeta = document.createElement('meta');
+    themeMeta.setAttribute('name', 'theme-color');
+    document.head.appendChild(themeMeta);
+  }
   document.body.classList.toggle('dark-theme', isDark);
   if (toggle) {
     toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
     toggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
   }
-  if (themeMeta) {
-    themeMeta.setAttribute('content', isDark ? STOIC_DARK_THEME_COLOR : STOIC_LIGHT_THEME_COLOR);
-  }
+  themeMeta.setAttribute('content', isDark ? STOIC_DARK_THEME_COLOR : STOIC_LIGHT_THEME_COLOR);
 }
 
 function toggleTheme() {
@@ -2833,9 +2858,9 @@ function stressShowSkill(index) {
   });
 
   detail.innerHTML =
-    '<div class="stress-detail-panel" style="background:' + skill.bg + ';">' +
-      '<div style="font-size:14px; font-weight:700; color:' + skill.color + '; margin-bottom:.45rem;">Skill ' + (index + 1) + ': ' + skill.name + '</div>' +
-      '<div style="font-size:13px; line-height:1.65; color:' + skill.color + ';">' + skill.description + '</div>' +
+    '<div class="stress-detail-panel" style="--skill-color:' + skill.color + '; background:' + skill.bg + ';">' +
+      '<div class="stress-detail-title">Skill ' + (index + 1) + ': ' + skill.name + '</div>' +
+      '<div class="stress-detail-description">' + skill.description + '</div>' +
     '</div>' +
     '<div class="stress-detail-grid">' +
       '<div class="stress-mini-card">' +
@@ -2852,7 +2877,7 @@ function stressShowSkill(index) {
 function stressPickLevel(index) {
   var examples = document.getElementById('stress-level-examples');
   var items = stressLevelExamples[index];
-  var html = '<div style="font-weight:600; color:#1a1a18; margin-bottom:5px;">Level ' + (index + 1) + ' examples</div>';
+  var html = '<div class="stress-level-heading">Level ' + (index + 1) + ' examples</div>';
   if (!examples || !items) return;
 
   document.querySelectorAll('#stress-level-selector .stress-level').forEach(function(levelBtn, levelIndex) {
