@@ -2883,9 +2883,8 @@ function stressShowSkill(index) {
 function stressPickLevel(index) {
   var examples = document.getElementById('stress-level-examples');
   var items = stressLevelExamples[index];
-  var html;
   if (!examples || !items) return;
-  html = '<div class="stress-level-heading">Level ' + (index + 1) + ' examples</div>';
+  var html = '<div class="stress-level-heading">Level ' + (index + 1) + ' examples</div>';
 
   document.querySelectorAll('#stress-level-selector .stress-level').forEach(function(levelBtn, levelIndex) {
     levelBtn.classList.toggle('active', levelIndex === index);
@@ -3793,7 +3792,6 @@ function initJournal() {
   }
 }
 
-applyTheme(localStorage.getItem(STOIC_THEME_KEY) === 'dark' ? 'dark' : 'light');
 initNavigation();
 spireUpdateProgress();
 initStress();
