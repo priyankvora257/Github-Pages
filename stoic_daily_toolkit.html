@@ -1343,7 +1343,7 @@ body.dark-theme .verdict-box.v-mixed {
 <body>
 
 <div class="hero">
-  <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" onclick="toggleTheme()">🌙 Dark</button>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme" onclick="toggleTheme()">Theme</button>
   <div class="hero-label">Ancient wisdom for modern life</div>
   <h1>Stoic Daily Toolkit</h1>
   <p>Practical techniques from Epictetus, Marcus Aurelius, and Seneca — organized for morning, evening, and every difficult moment in between.</p>
@@ -2551,6 +2551,7 @@ function applyTheme(theme) {
   document.body.classList.toggle('dark-theme', isDark);
   if (toggle) {
     toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
     toggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
   }
   themeMeta.setAttribute('content', isDark ? STOIC_DARK_THEME_COLOR : STOIC_LIGHT_THEME_COLOR);
@@ -2877,8 +2878,8 @@ function stressShowSkill(index) {
 function stressPickLevel(index) {
   var examples = document.getElementById('stress-level-examples');
   var items = stressLevelExamples[index];
-  var html = '<div class="stress-level-heading">Level ' + (index + 1) + ' examples</div>';
   if (!examples || !items) return;
+  var html = '<div class="stress-level-heading">Level ' + (index + 1) + ' examples</div>';
 
   document.querySelectorAll('#stress-level-selector .stress-level').forEach(function(levelBtn, levelIndex) {
     levelBtn.classList.toggle('active', levelIndex === index);
