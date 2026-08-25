@@ -1,14 +1,10 @@
 # Stoic Journal Backend Setup (GitHub + Vercel)
 
-This document covers one-time setup for cloud journal persistence using:
-- Vercel serverless functions
-- Secret GitHub gist as storage
+This document covers one-time setup for cloud journal persistence using Vercel serverless functions and a secret GitHub gist as storage.
 
 ## Architecture
 
-- Frontend: `stoic_daily_toolkit.html` on GitHub Pages
-- Backend API: Vercel project
-- Storage: one secret gist JSON document
+`stoic_daily_toolkit.html` (GitHub Pages frontend) calls a Vercel-hosted API, which reads and writes a single secret gist JSON document for storage.
 
 ## One-time GitHub setup
 
@@ -84,18 +80,12 @@ Commit and push to `main` so GitHub Pages serves the updated frontend.
 
 ## Week in review (Weekly tab)
 
-- The Reflection → Weekly tab shows a read-only "Week in review" card, surfaced on Saturday and Sunday.
-- It aggregates the current Monday–Sunday week's journal entries (Mon–Sat on Saturday, Mon–Sun on Sunday) into a weekly view per question, tallies which virtue you named most often, and counts the days you stepped into discomfort.
-- Discomfort days come from the `discomfort` boolean on each daily entry, toggled via the "Do hard things on purpose" tracker on the Stress tab. No extra endpoints or storage are required — it lives in the same gist entry as the journal text.
+The Reflection → Weekly tab shows a read-only "Week in review" card, surfaced on Saturday and Sunday. It aggregates the current Monday–Sunday week's journal entries (Mon–Sat on Saturday, Mon–Sun on Sunday) per question, tallies the most-named virtue, and counts discomfort days from the `discomfort` boolean toggled via the "Do hard things on purpose" tracker on the Stress tab. No extra endpoints or storage are required — it lives in the same gist entry as the journal text.
 
 ## Expected behavior
 
-- Same date: existing entry auto-loads and updates in place
-- New date: empty entry for that date
-- Autosave triggers as user types
+Selecting a date with an existing entry auto-loads and updates it in place; a new date starts with an empty entry. Autosave triggers as the user types.
 
 ## Security notes
 
-- Never commit token values or secrets to git
-- Env var names in docs are safe; values must stay secret
-- Restrict frontend origin with `APP_ORIGIN`
+Never commit token or secret values to git — env var names in docs are safe, but values must stay secret. Restrict the frontend origin with `APP_ORIGIN`.
