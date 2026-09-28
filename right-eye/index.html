@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f4ef">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Right Eye">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <title>Right Eye · Daily Drops</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--cp-bg); color: var(--cp-text);
+      font: 16px/1.4 "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    button { font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 3px solid var(--cp-link); outline-offset: 2px; }
+    .wrap { width: min(100%, 620px); margin: auto; padding: 24px 16px 64px; }
+    .eyebrow { color: var(--cp-accent); font-size: 12px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    header { margin-bottom: 20px; }
+    h1 { font-size: clamp(26px, 7vw, 34px); line-height: 1.12; margin: 6px 0; letter-spacing: -.035em; }
+    h2 { font-size: 20px; margin: 0; }
+    p { margin: 0; }
+    .sub, .muted { color: var(--cp-text-muted); }
+    .sub { font-size: 14px; }
+    .card {
+      background: var(--cp-surface); border: 1px solid var(--cp-border);
+      border-radius: 16px; padding: 20px; margin-bottom: 16px;
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+    .date-row, .card-head, .dose-row, .progress-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .date { font-size: 18px; font-weight: 700; }
+    .clock { color: var(--cp-text-muted); font-size: 13px; white-space: nowrap; }
+    .progress-row { margin-top: 12px; font-size: 14px; }
+    .progress { height: 8px; background: var(--cp-surface-soft); border-radius: 0.625rem; overflow: hidden; margin-top: 8px; }
+    .progress > span { display: block; height: 100%; background: var(--cp-accent); transition: width .2s; }
+    .next { border-color: var(--cp-accent); background: var(--cp-bg-elevated); }
+    .next-time { color: var(--cp-accent); font-size: 14px; font-weight: 800; margin: 16px 0 4px; }
+    .next-name { font-size: clamp(26px, 8vw, 36px); font-weight: 800; line-height: 1.12; letter-spacing: -.03em; overflow-wrap: anywhere; }
+    .next-note { color: var(--cp-text-muted); font-size: 14px; margin: 8px 0 16px; }
+    .primary, .secondary {
+      min-height: 52px; border-radius: 0.625rem; padding: 10px 18px; font-weight: 750;
+    }
+    .primary { border: 1px solid var(--cp-accent); background: var(--cp-accent); color: var(--cp-accent-fg); }
+    .primary:hover { background: var(--cp-accent-hover); }
+    .secondary { border: 1px solid var(--cp-border-strong); background: var(--cp-surface); color: var(--cp-text); }
+    .next .primary { width: 100%; }
+    .section-label { color: var(--cp-text-muted); font-size: 13px; font-weight: 750; margin: 24px 4px 10px; text-transform: uppercase; letter-spacing: .06em; }
+    .dinner { border-left: 4px solid var(--cp-accent); }
+    .dose-row { padding: 14px 0; border-bottom: 1px solid var(--cp-border); }
+    .dose-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .dose-row:first-child { padding-top: 0; }
+    .dose-info { min-width: 0; flex: 1; }
+    .dose-time { color: var(--cp-text-muted); font-size: 13px; font-weight: 700; }
+    .dose-name { font-size: 18px; font-weight: 700; overflow-wrap: anywhere; }
+    .dose-status { font-size: 12px; color: var(--cp-text-muted); }
+    .dose-row.done .dose-name { color: var(--cp-text-muted); }
+    .dose-row.done .dose-status { color: var(--cp-success); }
+    .dose-row .secondary { min-width: 88px; }
+    .dose-row.done .secondary { min-width: 76px; font-size: 14px; }
+    .error { border: 1px solid var(--cp-danger); color: var(--cp-danger); padding: 14px; border-radius: 0.625rem; margin-bottom: 16px; background: var(--cp-surface); }
+    .foot { color: var(--cp-text-muted); font-size: 13px; margin-top: 24px; line-height: 1.55; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">One-month course · Right eye</div>
+      <h1>Daily eye-drop tracker</h1>
+      <p class="sub">Follow the doctor's schedule · Times shown in India time</p>
+    </header>
+    <div id="error" class="error" role="alert" hidden></div>
+    <div id="offline-warning" class="error" role="status" hidden></div>
+    <section class="card" aria-label="Today's progress">
+      <div class="date-row"><div id="date" class="date">Loading…</div><div id="clock" class="clock"></div></div>
+      <div class="progress-row"><strong id="count">0 of 48 done</strong><span id="remaining"></span></div>
+      <div class="progress"><span id="progress" style="width:0%"></span></div>
+    </section>
+    <section class="card next" aria-label="Next scheduled dose">
+      <div class="eyebrow">Next to give</div>
+      <div id="next-time" class="next-time">Checking schedule…</div>
+      <div id="next-name" class="next-name"></div>
+      <p id="next-note" class="next-note"></p>
+      <button id="next-button" class="primary" type="button" hidden>Mark as given</button>
+    </section>
+    <section class="card dinner" aria-label="After-dinner tablet">
+      <div class="card-head"><div><div class="dose-time">AFTER DINNER · NO FIXED TIME</div><div class="dose-name">Fluconazole 150 mg tablet</div><div id="dinner-status" class="dose-status">Not yet marked</div></div><button id="dinner-button" class="secondary" type="button">Done</button></div>
+    </section>
+    <div class="section-label">Full schedule · Tap Done after each dose</div>
+    <div id="schedule" aria-label="Today's schedule"></div>
+    <p class="foot">Your check-offs stay on this iPhone in this browser. The checklist starts fresh each day in India time. Do not use Private Browsing or clear website data. Safari and a Home Screen installation may store separate check-offs; use only one. This page does not send alarms when it is closed; keep your existing phone alarms for dose times. Check the schedule against the doctor's copy before first use.</p>
+  </main>
+  <script>
+    const doses = [
+      ["07:00", "Vigamox"], ["07:10", "Hyla"], ["07:20", "Albrim-T"], ["07:30", "Homide"],
+      ["08:00", "Voriconazole 1%"], ["08:10", "Natamycin 5%"],
+      ["09:00", "Voriconazole"], ["09:10", "Natamycin"], ["09:30", "Itral (Itraconazole) eye ointment"],
+      ["10:00", "Voriconazole"], ["10:10", "Natamycin"], ["10:20", "Vigamox"], ["10:30", "Hyla"],
+      ["11:00", "Voriconazole"], ["11:10", "Natamycin"], ["11:20", "Panthegel"],
+      ["12:00", "Voriconazole"], ["12:10", "Natamycin"],
+      ["13:00", "Voriconazole"], ["13:10", "Natamycin"], ["13:20", "Vigamox"], ["13:30", "Hyla"],
+      ["14:00", "Voriconazole"], ["14:10", "Natamycin"],
+      ["15:00", "Voriconazole"], ["15:10", "Natamycin"], ["15:20", "Vigamox"], ["15:30", "Hyla"],
+      ["16:00", "Voriconazole"], ["16:10", "Natamycin"], ["16:40", "Panthegel"],
+      ["17:00", "Voriconazole"], ["17:10", "Natamycin"],
+      ["18:00", "Voriconazole"], ["18:10", "Natamycin"], ["18:20", "Vigamox"], ["18:30", "Hyla"],
+      ["19:00", "Voriconazole"], ["19:10", "Natamycin"], ["19:20", "Albrim-T"], ["19:30", "Homide"],
+      ["20:00", "Voriconazole"], ["20:10", "Natamycin"],
+      ["21:30", "Itral (Itraconazole) eye ointment"],
+      ["22:00", "Vigamox"], ["22:10", "Hyla"], ["22:20", "Panthegel"]
+    ].map(([time, name], index) => ({ id: String(index), time, name }));
+    const dinner = { id: "after-dinner", name: "Fluconazole 150 mg tablet" };
+    const total = doses.length + 1;
+    const zone = "Asia/Kolkata";
+    const dateParts = new Intl.DateTimeFormat("en-GB", { timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit" });
+    const dateLabel = new Intl.DateTimeFormat("en-IN", { timeZone: zone, weekday: "long", day: "numeric", month: "long" });
+    const timeLabel = new Intl.DateTimeFormat("en-IN", { timeZone: zone, hour: "numeric", minute: "2-digit", hour12: true });
+    const $ = id => document.getElementById(id);
+    let db, day, records = new Map(), saving = false;
+
+    function indiaDate(now = new Date()) {
+      const parts = Object.fromEntries(dateParts.formatToParts(now).filter(p => p.type !== "literal").map(p => [p.type, p.value]));
+      return `${parts.year}-${parts.month}-${parts.day}`;
+    }
+    function minutesNow(now = new Date()) {
+      const parts = new Intl.DateTimeFormat("en-GB", { timeZone: zone, hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+        .formatToParts(now);
+      const fields = Object.fromEntries(parts.filter(p => p.type !== "literal").map(p => [p.type, p.value]));
+      return Number(fields.hour) * 60 + Number(fields.minute);
+    }
+    function displayTime(time) {
+      const [hour, minute] = time.split(":").map(Number);
+      return `${hour % 12 || 12}:${String(minute).padStart(2, "0")} ${hour < 12 ? "AM" : "PM"}`;
+    }
+    function showError(message) {
+      $("error").textContent = message;
+      $("error").hidden = false;
+    }
+    function disableTracking() {
+      db = null;
+      $("next-button").hidden = true;
+      $("dinner-button").disabled = true;
+      $("schedule").querySelectorAll("button").forEach(button => { button.disabled = true; });
+    }
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) { reject(new Error("IndexedDB is unavailable in this browser")); return; }
+        const request = indexedDB.open("right-eye-daily-tracker", 1);
+        request.onupgradeneeded = () => {
+          const store = request.result.createObjectStore("checkoffs", { keyPath: "key" });
+          store.createIndex("day", "day");
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+        request.onblocked = () => reject(new Error("Close other open copies of the tracker, then reload"));
+      });
+    }
+    function readDay(selectedDay) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction("checkoffs", "readonly");
+        const request = tx.objectStore("checkoffs").index("day").getAll(selectedDay);
+        request.onsuccess = () => resolve(new Map(request.result.map(row => [row.id, row.completedAt])));
+        request.onerror = () => reject(request.error);
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+    function saveDose(id, completedAt, selectedDay) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction("checkoffs", "readwrite");
+        const store = tx.objectStore("checkoffs");
+        const key = `${selectedDay}:${id}`;
+        if (completedAt) store.put({ key, day: selectedDay, id, completedAt });
+        else store.delete(key);
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error);
+      });
+    }
+    function status(id) {
+      const completedAt = records.get(id);
+      return completedAt ? `Given at ${timeLabel.format(new Date(completedAt))} IST` : "Not yet marked";
+    }
+    function makeDoseRow(dose) {
+      const row = document.createElement("div");
+      row.className = `dose-row${records.has(dose.id) ? " done" : ""}`;
+      const info = document.createElement("div");
+      info.className = "dose-info";
+      const time = document.createElement("div");
+      time.className = "dose-time";
+      time.textContent = displayTime(dose.time);
+      const name = document.createElement("div");
+      name.className = "dose-name";
+      name.textContent = dose.name;
+      const detail = document.createElement("div");
+      detail.className = "dose-status";
+      detail.textContent = status(dose.id);
+      info.append(time, name, detail);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "secondary";
+      button.textContent = records.has(dose.id) ? "Undo" : "Done";
+      button.setAttribute("aria-label", `${button.textContent} ${dose.name} at ${displayTime(dose.time)}`);
+      button.addEventListener("click", () => toggle(dose.id));
+      row.append(info, button);
+      return row;
+    }
+    function render() {
+      const now = new Date();
+      $("date").textContent = dateLabel.format(now);
+      $("clock").textContent = `${timeLabel.format(now)} IST`;
+      const count = records.size;
+      $("count").textContent = `${count} of ${total} done`;
+      $("remaining").textContent = `${total - count} remaining`;
+      $("progress").style.width = `${count / total * 100}%`;
+      const next = doses.find(d => !records.has(d.id));
+      $("next-time").textContent = next ? displayTime(next.time) + (Number(next.time.slice(0, 2)) * 60 + Number(next.time.slice(3)) < minutesNow(now) ? " · still pending" : "") : "Timed doses completed";
+      $("next-name").textContent = next ? next.name : (records.has(dinner.id) ? "All done for today" : "After-dinner tablet remains");
+      $("next-note").textContent = next ? "Right eye · Mark only after giving this dose." : (records.has(dinner.id) ? "The checklist will start fresh tomorrow." : "Mark the tablet after dinner using the separate card below.");
+      $("next-button").hidden = !next;
+      $("next-button").onclick = next ? () => toggle(next.id) : null;
+      $("next-button").setAttribute("aria-label", next ? `Mark ${next.name} at ${displayTime(next.time)} as given` : "No timed dose remaining");
+      $("dinner-status").textContent = status(dinner.id);
+      $("dinner-button").textContent = records.has(dinner.id) ? "Undo" : "Done";
+      $("dinner-button").setAttribute("aria-label", `${$("dinner-button").textContent} after-dinner Fluconazole tablet`);
+      $("schedule").replaceChildren();
+      let group, hour = "";
+      for (const dose of doses) {
+        if (dose.time.slice(0, 2) !== hour) {
+          hour = dose.time.slice(0, 2);
+          group = document.createElement("section");
+          group.className = "card";
+          group.setAttribute("aria-label", `${displayTime(hour + ":00").split(":")[0]} ${Number(hour) < 12 ? "AM" : "PM"} schedule`);
+          $("schedule").append(group);
+        }
+        group.append(makeDoseRow(dose));
+      }
+    }
+    async function toggle(id) {
+      if (saving || !db) return;
+      saving = true;
+      try {
+        const currentDay = indiaDate();
+        if (currentDay !== day) {
+          day = currentDay;
+          records = await readDay(day);
+        }
+        const completedAt = records.has(id) ? null : new Date().toISOString();
+        await saveDose(id, completedAt, day);
+        if (completedAt) records.set(id, completedAt);
+        else records.delete(id);
+        $("error").hidden = true;
+        render();
+      } catch (error) {
+        showError(`Could not save this check-off: ${error.message}. Please retry; do not assume it was saved.`);
+      } finally {
+        saving = false;
+      }
+    }
+    $("dinner-button").addEventListener("click", () => toggle(dinner.id));
+    async function refresh() {
+      try {
+        const currentDay = indiaDate();
+        if (currentDay !== day) {
+          records = await readDay(currentDay);
+          day = currentDay;
+        }
+        render();
+      } catch (error) {
+        showError(`Could not read today's check-offs: ${error.message}. Reload the page before using it.`);
+        disableTracking();
+      }
+    }
+    (async () => {
+      try {
+        if (total !== 48) throw new Error(`Expected 48 daily items; got ${total}.`);
+        db = await openDatabase();
+        await refresh();
+        if (db) {
+          setInterval(refresh, 30000);
+          document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+        }
+      } catch (error) {
+        showError(`Tracker storage is unavailable: ${error.message}. Do not rely on this page for tracking until it is fixed.`);
+        $("next-time").textContent = "Unable to load";
+        $("date").textContent = "Unable to load";
+        disableTracking();
+      }
+    })();
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(error => {
+          $("offline-warning").textContent = `Offline access is unavailable: ${error.message}. Open this page online; saved check-offs remain on this device.`;
+          $("offline-warning").hidden = false;
+        });
+      });
+    } else {
+      $("offline-warning").textContent = "Offline access is unavailable in this browser. Open this page online.";
+      $("offline-warning").hidden = false;
+    }
+  </script>
+</body>
+</html>
