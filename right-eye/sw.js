@@ -1,4 +1,4 @@
-const CACHE = "right-eye-tracker-v1";
+const CACHE = "right-eye-tracker-v2";
 const ASSETS = ["./", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", event => {

@@ -92,11 +92,13 @@
       border-radius: 16px; padding: 20px; margin-bottom: 16px;
       box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
     }
+    .today { position: sticky; top: max(8px, env(safe-area-inset-top)); z-index: 2; }
     .date-row, .card-head, .dose-row, .progress-row {
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-    .date { font-size: 18px; font-weight: 700; }
-    .clock { color: var(--cp-text-muted); font-size: 13px; white-space: nowrap; }
+    .date-row { display: block; margin-top: 8px; }
+    .date { font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.2; }
+    .clock { color: var(--cp-accent); font-size: clamp(26px, 8vw, 34px); font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.25; }
     .progress-row { margin-top: 12px; font-size: 14px; }
     .progress { height: 8px; background: var(--cp-surface-soft); border-radius: 0.625rem; overflow: hidden; margin-top: 8px; }
     .progress > span { display: block; height: 100%; background: var(--cp-accent); transition: width .2s; }
@@ -138,7 +140,8 @@
     </header>
     <div id="error" class="error" role="alert" hidden></div>
     <div id="offline-warning" class="error" role="status" hidden></div>
-    <section class="card" aria-label="Today's progress">
+    <section class="card today" aria-label="Today's IST date, time and progress">
+      <div class="eyebrow">Today · India Standard Time (IST)</div>
       <div class="date-row"><div id="date" class="date">Loading…</div><div id="clock" class="clock"></div></div>
       <div class="progress-row"><strong id="count">0 of 48 done</strong><span id="remaining"></span></div>
       <div class="progress"><span id="progress" style="width:0%"></span></div>
@@ -151,7 +154,7 @@
       <button id="next-button" class="primary" type="button" hidden>Mark as given</button>
     </section>
     <section class="card dinner" aria-label="After-dinner tablet">
-      <div class="card-head"><div><div class="dose-time">AFTER DINNER · NO FIXED TIME</div><div class="dose-name">Fluconazole 150 mg tablet</div><div id="dinner-status" class="dose-status">Not yet marked</div></div><button id="dinner-button" class="secondary" type="button">Done</button></div>
+      <div class="card-head"><div><div class="dose-time">AFTER DINNER · NO FIXED TIME</div><div class="dose-name">Fluconazole 150 mg tablet</div><div id="dinner-status" class="dose-status">Not yet marked</div></div><button id="dinner-button" class="secondary" type="button" disabled>Done</button></div>
     </section>
     <div class="section-label">Full schedule · Tap Done after each dose</div>
     <div id="schedule" aria-label="Today's schedule"></div>
@@ -180,10 +183,10 @@
     const total = doses.length + 1;
     const zone = "Asia/Kolkata";
     const dateParts = new Intl.DateTimeFormat("en-GB", { timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit" });
-    const dateLabel = new Intl.DateTimeFormat("en-IN", { timeZone: zone, weekday: "long", day: "numeric", month: "long" });
-    const timeLabel = new Intl.DateTimeFormat("en-IN", { timeZone: zone, hour: "numeric", minute: "2-digit", hour12: true });
+    const dateLabel = new Intl.DateTimeFormat("en-IN", { timeZone: zone, weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    const timeLabel = new Intl.DateTimeFormat("en-IN", { timeZone: zone, hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true });
     const $ = id => document.getElementById(id);
-    let db, day, records = new Map(), saving = false;
+    let db, day, records = new Map(), saving = false, refreshing = false;
 
     function indiaDate(now = new Date()) {
       const parts = Object.fromEntries(dateParts.formatToParts(now).filter(p => p.type !== "literal").map(p => [p.type, p.value]));
@@ -245,7 +248,12 @@
     }
     function status(id) {
       const completedAt = records.get(id);
-      return completedAt ? `Given at ${timeLabel.format(new Date(completedAt))} IST` : "Not yet marked";
+      const completed = completedAt && new Date(completedAt);
+      return completed ? `Given ${dateLabel.format(completed)} at ${timeLabel.format(completed)} IST` : "Not yet marked";
+    }
+    function updateClock(now = new Date()) {
+      $("date").textContent = dateLabel.format(now);
+      $("clock").textContent = `${timeLabel.format(now)} IST`;
     }
     function makeDoseRow(dose) {
       const row = document.createElement("div");
@@ -273,8 +281,7 @@
     }
     function render() {
       const now = new Date();
-      $("date").textContent = dateLabel.format(now);
-      $("clock").textContent = `${timeLabel.format(now)} IST`;
+      updateClock(now);
       const count = records.size;
       $("count").textContent = `${count} of ${total} done`;
       $("remaining").textContent = `${total - count} remaining`;
@@ -308,8 +315,8 @@
       try {
         const currentDay = indiaDate();
         if (currentDay !== day) {
+          records = await readDay(currentDay);
           day = currentDay;
-          records = await readDay(day);
         }
         const completedAt = records.has(id) ? null : new Date().toISOString();
         await saveDose(id, completedAt, day);
@@ -325,6 +332,8 @@
     }
     $("dinner-button").addEventListener("click", () => toggle(dinner.id));
     async function refresh() {
+      if (refreshing || saving || !db) return;
+      refreshing = true;
       try {
         const currentDay = indiaDate();
         if (currentDay !== day) {
@@ -332,9 +341,12 @@
           day = currentDay;
         }
         render();
+        $("dinner-button").disabled = false;
       } catch (error) {
         showError(`Could not read today's check-offs: ${error.message}. Reload the page before using it.`);
         disableTracking();
+      } finally {
+        refreshing = false;
       }
     }
     (async () => {
@@ -343,6 +355,10 @@
         db = await openDatabase();
         await refresh();
         if (db) {
+          setInterval(() => {
+            updateClock();
+            if (indiaDate() !== day) refresh();
+          }, 1000);
           setInterval(refresh, 30000);
           document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
         }
