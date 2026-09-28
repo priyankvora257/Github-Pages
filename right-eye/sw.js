@@ -1,4 +1,4 @@
-const CACHE = "right-eye-tracker-v2";
+const CACHE = "right-eye-tracker-v3";
 const ASSETS = ["./", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", event => {
@@ -19,7 +19,7 @@ self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin || !url.pathname.startsWith(new URL(self.registration.scope).pathname)) return;
   event.respondWith(
-    fetch(event.request).then(response => {
+    fetch(event.request, { cache: "no-store" }).then(response => {
       if (response.ok) {
         const copy = response.clone();
         event.waitUntil(caches.open(CACHE).then(cache => cache.put(event.request, copy)));
