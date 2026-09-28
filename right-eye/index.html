@@ -112,6 +112,10 @@
     .primary { border: 1px solid var(--cp-accent); background: var(--cp-accent); color: var(--cp-accent-fg); }
     .primary:hover { background: var(--cp-accent-hover); }
     .secondary { border: 1px solid var(--cp-border-strong); background: var(--cp-surface); color: var(--cp-text); }
+    .download-link { display: block; width: 100%; text-align: center; text-decoration: none; margin: 12px 0; }
+    .download-link:focus-visible { outline: 3px solid var(--cp-link); outline-offset: 2px; }
+    .calendar-note { color: var(--cp-text-muted); font-size: 14px; line-height: 1.5; }
+    .calendar-note + .calendar-note { margin-top: 8px; }
     .next .primary { width: 100%; }
     .section-label { color: var(--cp-text-muted); font-size: 13px; font-weight: 750; margin: 24px 4px 10px; text-transform: uppercase; letter-spacing: .06em; }
     .dinner { border-left: 4px solid var(--cp-accent); }
@@ -155,6 +159,13 @@
     </section>
     <section class="card dinner" aria-label="After-dinner tablet">
       <div class="card-head"><div><div class="dose-time">AFTER DINNER · NO FIXED TIME</div><div class="dose-name">Fluconazole 150 mg tablet</div><div id="dinner-status" class="dose-status">Not yet marked</div></div><button id="dinner-button" class="secondary" type="button" disabled>Done</button></div>
+    </section>
+    <section class="card" aria-label="One-time calendar reminder setup">
+      <h2>Calendar reminders · one-time setup</h2>
+      <p class="calendar-note">47 timed doses each day, 29 September–28 October 2026 (IST). The after-dinner tablet has no timed alert.</p>
+      <a class="primary download-link" href="./right-eye-calendar-2026-09-29.ics" download="right-eye-calendar-2026-09-29.ics" type="text/calendar">Download calendar reminders</a>
+      <p class="calendar-note"><strong>Before importing into Google Calendar:</strong> Set the dedicated destination calendar’s Event notifications to 0 minutes before. Import this file into that calendar, then check one event and the next day’s recurrence.</p>
+      <p class="calendar-note">Google Calendar may ignore alarms in imported files. Check that notifications are enabled on your phone; the download alone does not guarantee alerts.</p>
     </section>
     <div class="section-label">Full schedule · Tap Done after each dose</div>
     <div id="schedule" aria-label="Today's schedule"></div>
