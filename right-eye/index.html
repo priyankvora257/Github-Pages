@@ -142,7 +142,7 @@
     <section class="card today" aria-label="Today's IST date, time and progress">
       <div class="eyebrow">Today · India Standard Time (IST)</div>
       <div class="date-row"><div id="date" class="date">Loading…</div><div id="clock" class="clock"></div></div>
-      <div class="progress-row"><strong id="count">0 of 48 done</strong><span id="remaining"></span></div>
+      <div class="progress-row"><strong id="count">0 of 22 done</strong><span id="remaining"></span></div>
       <div class="progress"><span id="progress" style="width:0%"></span></div>
     </section>
     <section class="card next" aria-label="Next scheduled dose">
@@ -157,29 +157,26 @@
     </section>
     <div class="section-label">Full schedule · Tap Done after each dose</div>
     <div id="schedule" aria-label="Today's schedule"></div>
-    <p class="foot">Your check-offs stay on this iPhone in this browser. The checklist starts fresh each day in India time. Do not use Private Browsing or clear website data. Safari and a Home Screen installation may store separate check-offs; use only one. This page does not send alarms when it is closed; keep your existing phone alarms for dose times. Check the schedule against the doctor's copy before first use.</p>
+    <p class="foot">Your check-offs stay on this iPhone in this browser. The checklist starts fresh each day in India time. Do not use Private Browsing or clear website data. Safari and a Home Screen installation may store separate check-offs; use only one. This page does not send alarms when it is closed. Previously imported calendar reminders will not change automatically; remove old reminders for the removed medicines. Check the current schedule against the doctor's instructions.</p>
   </main>
   <script>
+    // Keep original IDs so saved check-offs for retained medicines remain attached to the same dose.
     const doses = [
-      ["07:00", "Vigamox"], ["07:10", "Hyla"], ["07:20", "Albrim-T"], ["07:30", "Homide"],
-      ["08:00", "Voriconazole 1%"], ["08:10", "Natamycin 5%"],
-      ["09:00", "Voriconazole"], ["09:10", "Natamycin"], ["09:30", "Itral (Itraconazole) eye ointment"],
-      ["10:00", "Voriconazole"], ["10:10", "Natamycin"], ["10:20", "Vigamox"], ["10:30", "Hyla"],
-      ["11:00", "Voriconazole"], ["11:10", "Natamycin"], ["11:20", "Panthegel"],
-      ["12:00", "Voriconazole"], ["12:10", "Natamycin"],
-      ["13:00", "Voriconazole"], ["13:10", "Natamycin"], ["13:20", "Vigamox"], ["13:30", "Hyla"],
-      ["14:00", "Voriconazole"], ["14:10", "Natamycin"],
-      ["15:00", "Voriconazole"], ["15:10", "Natamycin"], ["15:20", "Vigamox"], ["15:30", "Hyla"],
-      ["16:00", "Voriconazole"], ["16:10", "Natamycin"], ["16:40", "Panthegel"],
-      ["17:00", "Voriconazole"], ["17:10", "Natamycin"],
-      ["18:00", "Voriconazole"], ["18:10", "Natamycin"], ["18:20", "Vigamox"], ["18:30", "Hyla"],
-      ["19:00", "Voriconazole"], ["19:10", "Natamycin"], ["19:20", "Albrim-T"], ["19:30", "Homide"],
-      ["20:00", "Voriconazole"], ["20:10", "Natamycin"],
-      ["21:30", "Itral (Itraconazole) eye ointment"],
-      ["22:00", "Vigamox"], ["22:10", "Hyla"], ["22:20", "Panthegel"]
-    ].map(([time, name], index) => ({ id: String(index), time, name }));
+      ["07:00", "Vigamox", "0"], ["07:10", "Hyla", "1"], ["07:20", "Albrim-T", "2"], ["07:30", "Homide", "3"],
+      ["09:30", "Itral (Itraconazole) eye ointment", "8"],
+      ["10:20", "Vigamox", "11"], ["10:30", "Hyla", "12"],
+      ["11:20", "Panthegel", "15"],
+      ["13:20", "Vigamox", "20"], ["13:30", "Hyla", "21"],
+      ["15:20", "Vigamox", "26"], ["15:30", "Hyla", "27"],
+      ["16:40", "Panthegel", "30"],
+      ["18:20", "Vigamox", "35"], ["18:30", "Hyla", "36"],
+      ["19:20", "Albrim-T", "39"], ["19:30", "Homide", "40"],
+      ["21:30", "Itral (Itraconazole) eye ointment", "43"],
+      ["22:00", "Vigamox", "44"], ["22:10", "Hyla", "45"], ["22:20", "Panthegel", "46"]
+    ].map(([time, name, id]) => ({ id, time, name }));
     const dinner = { id: "after-dinner", name: "Fluconazole 150 mg tablet" };
     const total = doses.length + 1;
+    const activeIds = new Set([...doses.map(d => d.id), dinner.id]);
     const zone = "Asia/Kolkata";
     const dateParts = new Intl.DateTimeFormat("en-GB", { timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit" });
     const dateLabel = new Intl.DateTimeFormat("en-IN", { timeZone: zone, weekday: "long", day: "numeric", month: "long", year: "numeric" });
@@ -228,7 +225,7 @@
       return new Promise((resolve, reject) => {
         const tx = db.transaction("checkoffs", "readonly");
         const request = tx.objectStore("checkoffs").index("day").getAll(selectedDay);
-        request.onsuccess = () => resolve(new Map(request.result.map(row => [row.id, row.completedAt])));
+        request.onsuccess = () => resolve(new Map(request.result.filter(row => activeIds.has(row.id)).map(row => [row.id, row.completedAt])));
         request.onerror = () => reject(request.error);
         tx.onerror = () => reject(tx.error);
       });
@@ -350,7 +347,7 @@
     }
     (async () => {
       try {
-        if (total !== 48) throw new Error(`Expected 48 daily items; got ${total}.`);
+        if (total !== 22) throw new Error(`Expected 22 daily items; got ${total}.`);
         db = await openDatabase();
         await refresh();
         if (db) {
