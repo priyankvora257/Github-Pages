@@ -1,10 +1,6 @@
 # Stoic Journal Backend Setup (GitHub + Vercel)
 
-This document covers one-time setup for cloud journal persistence using Vercel serverless functions and a secret GitHub gist as storage.
-
-## Architecture
-
-`stoic_daily_toolkit.html` (GitHub Pages frontend) calls a Vercel-hosted API, which reads and writes a single secret gist JSON document for storage.
+One-time setup for cloud journal persistence: the `stoic_daily_toolkit.html` frontend (GitHub Pages) calls a Vercel-hosted API, which reads and writes a single secret gist JSON document.
 
 ## One-time GitHub setup
 
@@ -28,12 +24,11 @@ This document covers one-time setup for cloud journal persistence using Vercel s
 ```
 
 4. Create a GitHub PAT (classic) with `gist` scope only.
-5. Copy gist URL and extract `GIST_ID` from:
-   `https://gist.github.com/<user>/<gist_id>`
+5. Extract `GIST_ID` from the gist URL: `https://gist.github.com/<user>/<gist_id>`
 
 ## One-time Vercel setup
 
-1. Create/import Vercel project from this repository.
+1. Import this repository as a Vercel project.
 2. Add these environment variables:
 
 | Name | Value |
@@ -46,8 +41,7 @@ This document covers one-time setup for cloud journal persistence using Vercel s
 | `SESSION_TTL_SECONDS` | `604800` (optional) |
 | `APP_ORIGIN` | GitHub Pages origin (for example `https://priyankvora257.github.io`) |
 
-3. Deploy/redeploy project.
-4. Copy Vercel base URL (for example `https://your-project.vercel.app`).
+3. Deploy, then copy the Vercel base URL (for example `https://your-project.vercel.app`).
 
 ## Frontend configuration
 
@@ -57,7 +51,7 @@ Update this line in `stoic_daily_toolkit.html`:
 var STOIC_API_BASE = 'https://your-project.vercel.app';
 ```
 
-Commit and push to `main` so GitHub Pages serves the updated frontend.
+Push to `main` so GitHub Pages serves the update.
 
 ## API endpoints
 
@@ -75,16 +69,16 @@ Commit and push to `main` so GitHub Pages serves the updated frontend.
 - `PUT /api/journal?date=YYYY-MM-DD`
   - Header: `Authorization: Bearer <token>`
   - Body: `{ "entry": { ...questionFields }, "discomfort": true }`
-  - `discomfort` is optional. When present it records whether you stepped into voluntary discomfort that day (used by the Weekly tab "Week in review"). When omitted, the stored value is preserved, so saving journal text never clears it.
+  - `discomfort` is optional. When present it records whether you stepped into voluntary discomfort that day. When omitted, the stored value is preserved.
   - Response: `{ ok, date, entry, questions }`
 
 ## Week in review (Weekly tab)
 
-The Reflection → Weekly tab shows a read-only "Week in review" card, surfaced on Saturday and Sunday. It aggregates the current Monday–Sunday week's journal entries (Mon–Sat on Saturday, Mon–Sun on Sunday) per question, tallies the most-named virtue, and counts discomfort days from the `discomfort` boolean toggled via the "Do hard things on purpose" tracker on the Stress tab. No extra endpoints or storage are required — it lives in the same gist entry as the journal text.
+On Saturday and Sunday, the Reflection → Weekly tab shows a read-only card aggregating the current Monday–Sunday week's entries per question (Mon–Sat on Saturday), the most-named virtue, and the count of `discomfort` days (set by the "Do hard things on purpose" tracker on the Stress tab). It needs no extra endpoints or storage.
 
 ## Expected behavior
 
-Selecting a date with an existing entry auto-loads and updates it in place; a new date starts with an empty entry. Autosave triggers as the user types.
+Selecting a date with an existing entry loads and updates it in place; a new date starts empty. Autosave triggers as you type.
 
 ## Security notes
 
